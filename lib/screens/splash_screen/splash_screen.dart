@@ -22,7 +22,7 @@ class SplashScreen extends StatelessWidget {
                     builder: (_) {
                       return CustomDialogue(callback: (){
                         Navigator.pop(context);
-                      }, text: "Done", type: dialogueType.error);
+                      }, text: "Transaction Done", type: dialogueType.error);
                     },
                   );
                 },
