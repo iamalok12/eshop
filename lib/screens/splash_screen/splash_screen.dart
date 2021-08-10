@@ -26,7 +26,7 @@ class SplashScreen extends StatelessWidget {
                     },
                   );
                 },
-                child: const Text("Hit me"))
+                child: const Text("Hit me with something"))
           ],
         ),
       ),
