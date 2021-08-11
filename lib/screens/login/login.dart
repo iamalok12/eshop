@@ -1,3 +1,4 @@
+import 'package:eshop/logic/login/login_repo.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:eshop/widgets/text_widget/custom_mobile_text_field.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 height: 15.h,
               ),
+              Text(LoginRepo.get),
               CustomMobileTextField(
                 controller: _phoneController,
               ),

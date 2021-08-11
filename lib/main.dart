@@ -1,8 +1,11 @@
 import 'package:eshop/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:eshop/utils/utils.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main()async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -16,7 +19,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           scaffoldBackgroundColor: kBackgroundColor,
           visualDensity: VisualDensity.adaptivePlatformDensity,
-          primarySwatch: Colors.pink,
         ),
         home: SplashScreen(),
       ),
