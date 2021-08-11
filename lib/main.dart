@@ -1,3 +1,4 @@
+import 'package:eshop/screens/otp_screens/otp_signin.dart';
 import 'package:eshop/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,7 +13,8 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(360,640),
       builder: ()=>MaterialApp(
-        home: SplashScreen(),
+        debugShowCheckedModeBanner: false,
+        home: OtpLogin(),
       ),
     );
   }
