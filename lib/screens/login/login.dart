@@ -1,5 +1,6 @@
 import 'package:eshop/utils/utils.dart';
 import 'package:eshop/widgets/text_widget/custom_mobile_text_field.dart';
+
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -8,7 +9,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _phoneController=TextEditingController();
+  final _phoneController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -69,9 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               GestureDetector(
                 onTap: () async {
-                  if (_formKey.currentState.validate()) {
-                    print("working");
-                  }
+                  if (_formKey.currentState.validate()) {}
                 },
                 child: Container(
                   height: 58.h,
