@@ -62,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 height: 15.h,
               ),
-              Text(LoginRepo.get),
+              Text(LoginRepo.get.),
               CustomMobileTextField(
                 controller: _phoneController,
               ),
