@@ -1,5 +1,5 @@
 import 'package:eshop/utils/utils.dart';
-import 'package:eshop/widgets/text_widget/custom_text_field.dart';
+import 'package:eshop/widgets/text_widget/custom_mobile_text_field.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -8,26 +8,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   final _phoneController=TextEditingController();
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String mobileValidator(String number){
-    if(isNumeric(number)&&number.length==10) {
-      return null;
-    } else{
-      Fluttertoast.showToast(
-          msg: "Invalid Mobile Number",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0
-      );
-      return "";
-    }
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,11 +61,8 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 height: 15.h,
               ),
-              CustomTextWidget(
-                title: "Mobile Number",
-                keyboardType: TextInputType.phone,
+              CustomMobileTextField(
                 controller: _phoneController,
-                validator: mobileValidator,
               ),
               SizedBox(
                 height: 20.h,
@@ -91,6 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
               GestureDetector(
                 onTap: () async {
                   if (_formKey.currentState.validate()) {
+                    print("working");
                   }
                 },
                 child: Container(
