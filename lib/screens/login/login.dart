@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:eshop/utils/utils.dart';
 import 'package:eshop/widgets/text_widget/custom_text_field.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +91,6 @@ class _LoginScreenState extends State<LoginScreen> {
               GestureDetector(
                 onTap: () async {
                   if (_formKey.currentState.validate()) {
-                    null;
                   }
                 },
                 child: Container(
