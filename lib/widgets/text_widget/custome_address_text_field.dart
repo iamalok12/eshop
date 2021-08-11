@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:eshop/utils/utils.dart';
+import 'package:flutter/material.dart';
 
 class CustomAddressTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -42,11 +42,10 @@ class CustomAddressTextField extends StatelessWidget {
               ),
             ),
             controller: controller,
-            validator: (text){
-              if(isAlpha(text)&&text.length>=3){
+            validator: (text) {
+              if (isAlpha(text) && text.length >= 3) {
                 return null;
-              }
-              else{
+              } else {
                 Fluttertoast.showToast(
                     msg: "Address is too short",
                     toastLength: Toast.LENGTH_SHORT,
@@ -54,12 +53,10 @@ class CustomAddressTextField extends StatelessWidget {
                     timeInSecForIosWeb: 2,
                     backgroundColor: Colors.red,
                     textColor: Colors.white,
-                    fontSize: 16.0
-                );
+                    fontSize: 16.0);
                 return "";
               }
-            }
-        ),
+            }),
       ),
     );
   }
