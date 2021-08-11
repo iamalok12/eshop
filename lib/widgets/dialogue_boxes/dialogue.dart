@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rive/rive.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 enum dialogueType{
   error,
@@ -18,8 +20,12 @@ class CustomDialogue extends StatelessWidget {
           child: Column(
             children: [
               Text(text),
-              Icon(type==dialogueType.error?Icons.clear:Icons.airline_seat_individual_suite_outlined),
-              ElevatedButton(onPressed: callback,)
+              SizedBox(
+                height: 80.h,
+                width: 80.h,
+                child:type==dialogueType.ok?const RiveAnimation.asset('assets/icons/error.riv'):const RiveAnimation.asset('assets/icons/check.riv'),
+              ),
+              ElevatedButton(onPressed: callback,child: const Text("OK"),),
             ],
           ),
         )

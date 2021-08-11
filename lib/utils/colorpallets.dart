@@ -1,13 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'dart:ui';
 
-
-
-const Color kbackgroundColor = Color(0xffE8F6EF);
-
-
-
-
-
-
-
+Color kBackground=const Color(0xffE8F6EF);
