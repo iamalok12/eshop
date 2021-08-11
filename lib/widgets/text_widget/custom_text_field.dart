@@ -18,40 +18,23 @@ class CustomTextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(30.0),
-          ),
-          color: Colors.white),
-      width: 350.w,
-      // height: 60.h,
-      margin: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-      // padding: const EdgeInsets.fromLTRB(10, 15, 10, 12),
-      child: Theme(
-        data: Theme.of(context).copyWith(splashColor: Colors.transparent),
-        child: TextFormField(
-          keyboardType: keyboardType,
-          obscureText: isObsecure,
-          style: const TextStyle(fontSize: 15.0, color: Colors.black),
-          decoration: InputDecoration(
+    return Padding(
+      padding: const EdgeInsets.only(right: 20, left: 20),
+      child: TextFormField(
+        validator: validator,
+        keyboardType: keyboardType,
+        obscureText: isObsecure,
+        controller: controller,
+        decoration: InputDecoration(
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(30.0)),
+              borderSide: BorderSide.none,
+            ),
+            hintStyle: const TextStyle(color: Colors.black54),
             filled: true,
-            border: InputBorder.none,
-            fillColor: Colors.white,
-            hintText: title,
-            contentPadding: const EdgeInsets.only(left: 14.0, bottom: 12.0),
-            focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.white),
-              borderRadius: BorderRadius.circular(25.7),
-            ),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: const BorderSide(color: Colors.white),
-              borderRadius: BorderRadius.circular(25.7),
-            ),
-          ),
-          controller: controller,
-          validator: validator
-        ),
+            fillColor: kWhiteColor,
+            hintText: title),
+        style: const TextStyle(color: Colors.black54),
       ),
     );
   }
