@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       builder: ()=>MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          scaffoldBackgroundColor: kBackground,
+          scaffoldBackgroundColor: kBackgroundColor,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           primarySwatch: Colors.pink,
         ),
