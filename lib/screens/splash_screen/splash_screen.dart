@@ -1,34 +1,36 @@
+import 'package:eshop/screens/screens.dart';
+import 'package:eshop/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:eshop/widgets/widgets.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+class _SplashScreenState extends State<SplashScreen> {
+
+  Future<void> goToScreen()async{
+    await Future.delayed(const Duration(seconds: 2),(){
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+    });
+  }
+  @override
+  void initState() {
+    goToScreen();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              height: 200.h,
-              width: 200.w,
-              color: Colors.amber,
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (_) {
-                      return CustomDialogue(callback: (){
-                        Navigator.pop(context);
-                      }, text: "Done", type: dialogueType.error);
-                    },
-                  );
-                },
-                child: const Text("Hit me"))
-          ],
-        ),
+        child: Center(
+          child: Column(
+            children: [
+              SizedBox(height: 200.h,),
+              Text("E-Shop",style: GoogleFonts.orbitron(fontSize: 50.sp),)
+            ],
+          ),
+        )
       ),
     );
   }
