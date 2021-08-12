@@ -1,6 +1,5 @@
 import 'package:eshop/screens/home.dart';
 import 'package:eshop/screens/screens.dart';
-import 'package:flutter/material.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +8,9 @@ import 'logics/login/authenticate/authentication_state.dart';
 import 'logics/login/authenticate/authentication_bloc.dart';
 import 'logics/login/data/user_repository.dart';
 import 'logics/login/login/login_page.dart';
+
+
+
 
 Future<void> main()async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,8 +29,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(360,640),
-      builder: ()=>MaterialApp(
+      designSize: const Size(360, 640),
+      builder: () => MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           scaffoldBackgroundColor: kBackgroundColor,

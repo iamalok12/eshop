@@ -1,9 +1,9 @@
 import 'package:eshop/utils/utils.dart';
 import 'package:flutter/material.dart';
 
-class CustomNameTextField extends StatelessWidget {
+class CustomPinCodeTextField extends StatelessWidget {
   final TextEditingController controller;
-  const CustomNameTextField({
+  const CustomPinCodeTextField({
     Key key,
     this.controller,
   }) : super(key: key);
@@ -23,14 +23,14 @@ class CustomNameTextField extends StatelessWidget {
       child: Theme(
         data: Theme.of(context).copyWith(splashColor: Colors.transparent),
         child: TextFormField(
-            keyboardType: TextInputType.name,
+            keyboardType: TextInputType.number,
             style: const TextStyle(fontSize: 15.0, color: Colors.black),
             decoration: InputDecoration(
               errorStyle: const TextStyle(height: 0),
               filled: true,
               border: InputBorder.none,
               fillColor: Colors.white,
-              hintText: "Name",
+              hintText: "PinCode",
               contentPadding: const EdgeInsets.only(left: 14.0, bottom: 12.0),
               focusedBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Colors.white),
@@ -43,11 +43,11 @@ class CustomNameTextField extends StatelessWidget {
             ),
             controller: controller,
             validator: (text) {
-              if (isAlpha(text) && text.length >= 3) {
+              if (isNumeric(text) && text.length == 6) {
                 return null;
               } else {
                 Fluttertoast.showToast(
-                    msg: "Name must contain minimum 3 characters",
+                    msg: "Invalid PinCode",
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.CENTER,
                     timeInSecForIosWeb: 2,
