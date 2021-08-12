@@ -11,9 +11,9 @@ class CustomAddressTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
           borderRadius: BorderRadius.all(
-            Radius.circular(30.0),
+            Radius.circular(30.0.w),
           ),
           color: Colors.white),
       width: 350.w,
@@ -24,21 +24,21 @@ class CustomAddressTextField extends StatelessWidget {
         data: Theme.of(context).copyWith(splashColor: Colors.transparent),
         child: TextFormField(
             keyboardType: TextInputType.streetAddress,
-            style: const TextStyle(fontSize: 15.0, color: Colors.black),
+            style: TextStyle(fontSize: 15.0.sp, color: Colors.black),
             decoration: InputDecoration(
               errorStyle: const TextStyle(height: 0),
               filled: true,
               border: InputBorder.none,
-              fillColor: Colors.white,
+              fillColor: kWhiteColor,
               hintText: "Address",
-              contentPadding: const EdgeInsets.only(left: 14.0, bottom: 12.0),
+              contentPadding: EdgeInsets.only(left: 14.0.w, bottom: 12.0.w),
               focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.white),
-                borderRadius: BorderRadius.circular(25.7),
+                borderSide: BorderSide(color: kWhiteColor),
+                borderRadius: BorderRadius.circular(25.7.w),
               ),
               enabledBorder: UnderlineInputBorder(
                 borderSide: const BorderSide(color: Colors.white),
-                borderRadius: BorderRadius.circular(25.7),
+                borderRadius: BorderRadius.circular(25.7.w),
               ),
             ),
             controller: controller,
@@ -54,7 +54,7 @@ class CustomAddressTextField extends StatelessWidget {
                     timeInSecForIosWeb: 2,
                     backgroundColor: Colors.red,
                     textColor: Colors.white,
-                    fontSize: 16.0
+                    fontSize: 16.0.sp
                 );
                 return "";
               }
