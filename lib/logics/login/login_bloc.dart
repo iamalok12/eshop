@@ -7,15 +7,12 @@ import 'login_state.dart';
 
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
+  LoginBloc() : super(InitialLoginState());
   final LoginRepo _repo=LoginRepo();
   StreamSubscription subscription;
-  void dispose() {
-    subscription.cancel();
-  }
+
 
   String verID = "";
-  LoginBloc() : super(InitialLoginState());
-
   @override
   Stream<LoginState> mapEventToState(
       LoginEvent event,

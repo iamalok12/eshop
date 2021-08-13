@@ -1,7 +1,9 @@
 import 'package:eshop/logics/login/login_bloc.dart';
 import 'package:eshop/logics/login/login_state.dart';
+import 'package:eshop/logics/login/login_event.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:eshop/widgets/buttons/submit_arrow_button/submit_arrow_button.dart';
+import 'package:eshop/widgets/progress_indicator/progress_indicator.dart';
 import 'package:eshop/widgets/text_input_widget/custom_mobile_text_field.dart';
 import 'package:eshop/widgets/text_input_widget/custom_otp_text_field.dart';
 import 'package:flutter/material.dart';
@@ -62,14 +64,27 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(
               height: 15.h,
             ),
-            BlocBuilder<LoginBloc, LoginState>(
+            BlocConsumer<LoginBloc, LoginState>(
               builder: (context, state) {
                 if (state is InitialLoginState) {
                   return PhoneInput();
                 } else if (state is OtpSentState) {
                   return OtpInput();
                 } else if (state is LoadingState) {
-                  return Text("asasas");
+                  return const Text("Load");
+                }
+                else{
+                  return const Text("Success");
+                }
+              },
+              listener: (context,state){
+                if(state is LoadingState){
+                  showDialog(context: context, builder:(_){
+                    return CustomProgressIndicator();
+                  });
+                }
+                else {
+                  Navigator.pop(context);
                 }
               },
             ),
@@ -97,9 +112,11 @@ class PhoneInput extends StatelessWidget {
           ),
           SubmitArrowButton(
             callback: (){
-              // BlocProvider.of<LoginBloc>(context).add();
+              BlocProvider.of<LoginBloc>(context).add(
+                SendOtpEvent(phoNo: "+91${_phoneController.text}"),
+              );
             },
-          )
+          ),
         ],
       ),
     );
@@ -121,7 +138,13 @@ class OtpInput extends StatelessWidget {
           SizedBox(
             height: 20.h,
           ),
-          const SubmitArrowButton()
+          SubmitArrowButton(
+            callback: (){
+              BlocProvider.of<LoginBloc>(context).add(
+                VerifyOtpEvent(otp: _otp.text)
+              );
+            },
+          )
         ],
       ),
     );

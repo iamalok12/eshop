@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:eshop/logics/authentication_state/authentication_repo.dart';
 import 'package:meta/meta.dart';
-
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 
