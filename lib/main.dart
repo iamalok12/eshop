@@ -1,58 +1,69 @@
-import 'package:eshop/screens/home.dart';
+import 'package:eshop/logics/authentication_state/authentication_bloc.dart';
+import 'package:eshop/screens/customer_home/customer_home.dart';
 import 'package:eshop/screens/screens.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'logics/login/authenticate/authentication_event.dart';
-import 'logics/login/authenticate/authentication_state.dart';
-import 'logics/login/authenticate/authentication_bloc.dart';
-import 'logics/login/data/user_repository.dart';
-import 'logics/login/login/login_page.dart';
 
+class MyBlocDelegate extends BlocObserver {
+  @override
+  void onTransition(Bloc bloc, Transition transition) {
+    super.onTransition(bloc, transition);
+    print(transition.toString());
+  }
 
+  @override
+  void onError(BlocBase bloc, Object error, StackTrace stacktrace) {
+    super.onError(bloc, error, stacktrace);
+    print(error);
+  }
 
+  @override
+  void onEvent(Bloc bloc, Object event) {
+    super.onEvent(bloc, event);
+    print(event);
+  }
+}
 
-Future<void> main()async{
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
-  final UserRepository userRepository = UserRepository();
-  runApp(BlocProvider(
-    create: (context) => AuthenticationBloc(userRepository)..add(AppStarted()),
-    child: MyApp(userRepository: userRepository),
-  ));
+  Bloc.observer = MyBlocDelegate();
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (BuildContext context) => AuthenticationBloc()..add(AppStarted()),
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  final UserRepository userRepository;
-  const MyApp({Key key, this.userRepository}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: const Size(360, 640),
       builder: () => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          scaffoldBackgroundColor: kBackgroundColor,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-          builder: (context, state) {
-            if (state is Uninitialized) {
-              return SplashScreen();
-            } else if (state is Unauthenticated) {
-              return LoginPage(
-                userRepository: userRepository,
-              );
-            } else if (state is Authenticated) {
-              return Home();
-            } else {
-              return SplashScreen();
-            }
-            ;
-          },
-        ),
-      ),
+          theme: ThemeData(
+            primarySwatch: Colors.orange,
+          ),
+          home: BlocBuilder<AuthenticationBloc,AuthenticationState>(
+            builder: (BuildContext context, state) {
+              if(state is UnAuthenticated){
+                return LoginScreen();
+              }
+              else if(state is CustomerAuthenticated){
+                return CustomerHome();
+              }
+              else{
+                return SplashScreen();
+              }
+            },
+          ),),
     );
   }
 }
