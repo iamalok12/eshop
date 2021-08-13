@@ -1,10 +1,13 @@
 import 'package:eshop/logics/authentication_state/authentication_bloc.dart';
+import 'package:eshop/logics/login/login_bloc.dart';
 import 'package:eshop/screens/customer_home/customer_home.dart';
 import 'package:eshop/screens/screens.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'logics/login/login_bloc.dart';
+
 
 class MyBlocDelegate extends BlocObserver {
   @override
@@ -36,6 +39,7 @@ Future<void> main() async {
         BlocProvider(
           create: (BuildContext context) => AuthenticationBloc()..add(AppStarted()),
         ),
+        BlocProvider(create: (BuildContext context)=>LoginBloc())
       ],
       child: MyApp(),
     ),

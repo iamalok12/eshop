@@ -1,29 +1,26 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:eshop/logics/authentication_state/authentication_repo.dart';
 import 'package:meta/meta.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
-  final FirebaseAuth _auth=FirebaseAuth.instance;
   AuthenticationBloc() : super(AuthenticationInitial());
+  final AuthRepo _repo=AuthRepo();
 
   @override
   Stream<AuthenticationState> mapEventToState(
     AuthenticationEvent event,
   ) async* {
     if(event is AppStarted){
-      if(_auth.currentUser==null){
+      if(_repo.auth.currentUser==null){
         yield UnAuthenticated();
       }
       else{
-        print(_auth.currentUser.phoneNumber);
-        final data=await FirebaseFirestore.instance.collection("users").doc(_auth.currentUser.phoneNumber).get();
-        final String type=data.data()['type'].toString();
+        print(_repo.auth.currentUser.phoneNumber);
+        final String type=await _repo.type();
         if(type=="customer"){
           yield CustomerAuthenticated();
         }

@@ -56,7 +56,7 @@ class CustomPinCodeTextField extends StatelessWidget {
                     fontSize: 16.0);
                 return "";
               }
-            }),
+            },),
       ),
     );
   }
