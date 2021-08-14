@@ -1,7 +1,8 @@
 import 'package:eshop/logics/authentication_state/authentication_bloc.dart';
 import 'package:eshop/logics/login/login_bloc.dart';
-import 'package:eshop/screens/customer_home/customer_home.dart';
-import 'package:eshop/screens/screens.dart';
+import 'package:eshop/presentation/screens/customer_home/customer_home.dart';
+import 'package:eshop/presentation/screens/login_screen/login.dart';
+import 'package:eshop/presentation/screens/splash_screen/splash_screen.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

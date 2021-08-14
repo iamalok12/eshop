@@ -1,11 +1,11 @@
 import 'package:eshop/logics/login/login_bloc.dart';
 import 'package:eshop/logics/login/login_state.dart';
 import 'package:eshop/logics/login/login_event.dart';
+import 'package:eshop/presentation/widgets/buttons/submit_arrow_button/submit_arrow_button.dart';
+import 'package:eshop/presentation/widgets/progress_indicator/progress_indicator.dart';
+import 'package:eshop/presentation/widgets/text_input_widget/custom_mobile_text_field.dart';
+import 'package:eshop/presentation/widgets/text_input_widget/custom_otp_text_field.dart';
 import 'package:eshop/utils/utils.dart';
-import 'package:eshop/widgets/buttons/submit_arrow_button/submit_arrow_button.dart';
-import 'package:eshop/widgets/progress_indicator/progress_indicator.dart';
-import 'package:eshop/widgets/text_input_widget/custom_mobile_text_field.dart';
-import 'package:eshop/widgets/text_input_widget/custom_otp_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
