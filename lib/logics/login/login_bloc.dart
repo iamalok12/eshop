@@ -10,7 +10,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(InitialLoginState());
   final LoginRepo _repo=LoginRepo();
   StreamSubscription subscription;
-
+  void dispose() {
+    subscription.cancel();
+  }
   String verID = "";
   @override
   Stream<LoginState> mapEventToState(
