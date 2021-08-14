@@ -97,7 +97,7 @@ class PhoneInput extends StatelessWidget {
           ),
           SubmitArrowButton(
             callback: (){
-              // BlocProvider.of<LoginBloc>(context).add();
+              BlocProvider.of<LoginBloc>(context).add(SendOtpEvent(_phoneController.value.text));
             },
           )
         ],

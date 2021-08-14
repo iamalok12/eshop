@@ -20,7 +20,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Stream<LoginState> mapEventToState(
       LoginEvent event,
       ) async* {
-    if (event is SendOtpEvent) {
+    if (event is SendOtpEvent){
       yield LoadingState();
       subscription = sendOtp(event.phoNo).listen((event) {
         add(event);
