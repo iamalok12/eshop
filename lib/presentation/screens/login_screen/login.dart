@@ -1,11 +1,7 @@
-import 'package:eshop/logics/login/login_bloc.dart';
-import 'package:eshop/logics/login/login_state.dart';
+import 'package:eshop/presentation/widgets/widgets.dart';
 import 'package:eshop/utils/utils.dart';
-import 'package:eshop/widgets/buttons/submit_arrow_button/submit_arrow_button.dart';
-import 'package:eshop/widgets/text_input_widget/custom_mobile_text_field.dart';
-import 'package:eshop/widgets/text_input_widget/custom_otp_text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eshop/logics/logics.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -62,14 +58,27 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(
               height: 15.h,
             ),
-            BlocBuilder<LoginBloc, LoginState>(
+            BlocConsumer<LoginBloc, LoginState>(
               builder: (context, state) {
                 if (state is InitialLoginState) {
                   return PhoneInput();
                 } else if (state is OtpSentState) {
                   return OtpInput();
                 } else if (state is LoadingState) {
-                  return Text("asasas");
+                  return const Text("Load");
+                }
+                else{
+                  return const Text("Success");
+                }
+              },
+              listener: (context,state){
+                if(state is LoadingState){
+                  showDialog(context: context, builder:(_){
+                    return CustomProgressIndicator();
+                  });
+                }
+                else {
+                  Navigator.pop(context);
                 }
               },
             ),
@@ -83,6 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
 class PhoneInput extends StatelessWidget {
   final _phoneController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -97,9 +107,13 @@ class PhoneInput extends StatelessWidget {
           ),
           SubmitArrowButton(
             callback: (){
-              BlocProvider.of<LoginBloc>(context).add(SendOtpEvent(_phoneController.value.text));
+              if(_formKey.currentState.validate()){
+                BlocProvider.of<LoginBloc>(context).add(
+                  SendOtpEvent(phoNo: "+91${_phoneController.text}"),
+                );
+              }
             },
-          )
+          ),
         ],
       ),
     );
@@ -121,7 +135,13 @@ class OtpInput extends StatelessWidget {
           SizedBox(
             height: 20.h,
           ),
-          const SubmitArrowButton()
+          SubmitArrowButton(
+            callback: (){
+              BlocProvider.of<LoginBloc>(context).add(
+                VerifyOtpEvent(otp: _otp.text)
+              );
+            },
+          )
         ],
       ),
     );
