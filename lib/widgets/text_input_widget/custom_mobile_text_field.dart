@@ -23,38 +23,39 @@ class CustomMobileTextField extends StatelessWidget {
       child: Theme(
         data: Theme.of(context).copyWith(splashColor: Colors.transparent),
         child: TextFormField(
-            keyboardType: TextInputType.number,
-            style: const TextStyle(fontSize: 15.0, color: Colors.black),
-            decoration: InputDecoration(
-              errorStyle: const TextStyle(height: 0),
-              filled: true,
-              border: InputBorder.none,
-              fillColor: Colors.white,
-              hintText: "Mobile Number",
-              contentPadding: const EdgeInsets.only(left: 14.0, bottom: 12.0),
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.white),
-                borderRadius: BorderRadius.circular(25.7),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                borderSide: const BorderSide(color: Colors.white),
-                borderRadius: BorderRadius.circular(25.7),
-              ),
+          keyboardType: TextInputType.number,
+          style: const TextStyle(fontSize: 15.0, color: Colors.black),
+          decoration: InputDecoration(
+            errorStyle: const TextStyle(height: 0),
+            filled: true,
+            border: InputBorder.none,
+            fillColor: Colors.white,
+            hintText: "Mobile Number",
+            contentPadding: const EdgeInsets.only(left: 14.0, bottom: 12.0),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.white),
+              borderRadius: BorderRadius.circular(25.7),
             ),
-            controller: controller,
-            validator: (text) {
-              if (isNumeric(text) && text.length == 10) {
-                return null;
-              } else {
-                print("wrong");
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Invalid mobile number"),
-                  ),
-                );
-                return "";
-              }
-            }),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: const BorderSide(color: Colors.white),
+              borderRadius: BorderRadius.circular(25.7),
+            ),
+          ),
+          controller: controller,
+          validator: (text) {
+            if (isNumeric(text) && text.length == 10) {
+              return null;
+            } else {
+              print("wrong");
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Invalid mobile number"),
+                ),
+              );
+              return "";
+            }
+          },
+        ),
       ),
     );
   }
