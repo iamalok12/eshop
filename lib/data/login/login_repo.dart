@@ -5,18 +5,19 @@ class LoginRepo{
 
     Future<void> sendOtp(
         String phoneNumber,
-        Duration timeOut,
         PhoneVerificationFailed phoneVerificationFailed,
         PhoneVerificationCompleted phoneVerificationCompleted,
         PhoneCodeSent phoneCodeSent,
         PhoneCodeAutoRetrievalTimeout autoRetrievalTimeout) async {
-      auth.verifyPhoneNumber(
+      print("otp fn triggered");
+      print(phoneNumber);
+      await auth.verifyPhoneNumber(
           phoneNumber: phoneNumber,
-          timeout: timeOut,
           verificationCompleted: phoneVerificationCompleted,
+          codeSent:phoneCodeSent,
           verificationFailed: phoneVerificationFailed,
-          codeSent: phoneCodeSent,
-          codeAutoRetrievalTimeout: autoRetrievalTimeout);
+          codeAutoRetrievalTimeout: autoRetrievalTimeout
+      );
     }
   Future<User> verifyAndLogin(
       String verificationId, String smsCode) async {

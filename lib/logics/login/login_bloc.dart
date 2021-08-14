@@ -1,21 +1,19 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:eshop/logics/login/login_repo.dart';
+import 'package:eshop/data/login/login_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
+  LoginBloc() : super(InitialLoginState());
   final LoginRepo _repo=LoginRepo();
   StreamSubscription subscription;
   void dispose() {
     subscription.cancel();
   }
-
   String verID = "";
-  LoginBloc() : super(InitialLoginState());
-
   @override
   Stream<LoginState> mapEventToState(
       LoginEvent event,
@@ -48,18 +46,22 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-
   Stream<LoginEvent> sendOtp(String phoNo) async* {
+
+    print(phoNo);
     final StreamController<LoginEvent> eventStream = StreamController();
     PhoneVerificationCompleted verified (AuthCredential authCredential) {
-      if(_repo.auth.currentUser!=null){
+      print("executing");
+      print(_repo.auth.currentUser);
+      if(_repo.auth.currentUser==null){
         eventStream.add(LoginCompleteEvent(_repo.auth.currentUser));
         eventStream.close();
       }
       return null;
     }
     PhoneVerificationFailed exception(FirebaseAuthException authException) {
-      print(authException.message);
+      print("wrong");
+      print("error: +$authException");
       eventStream.add(LoginExceptionEvent(onError.toString()));
       eventStream.close();
       return null;
@@ -75,9 +77,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       return null;
     }
 
-    await _repo.sendOtp(
+     _repo.sendOtp(
         phoNo,
-        const Duration(seconds: 1),
         exception,
         verified,
         codeSent,
