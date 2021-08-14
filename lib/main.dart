@@ -8,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'logics/login/login_bloc.dart';
 
-
-
 class MyBlocDelegate extends BlocObserver {
   @override
   void onTransition(Bloc bloc, Transition transition) {
@@ -38,9 +36,12 @@ Future<void> main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (BuildContext context) => AuthenticationBloc()..add(AppStarted()),
+          create: (BuildContext context) =>
+              AuthenticationBloc()..add(AppStarted()),
         ),
-        BlocProvider(create: (BuildContext context)=>LoginBloc())
+        BlocProvider(
+          create: (BuildContext context) => LoginBloc(),
+        )
       ],
       child: MyApp(),
     ),
@@ -53,22 +54,21 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(360, 640),
       builder: () => MaterialApp(
-          theme: ThemeData(
-            primarySwatch: Colors.orange,
-          ),
-          home: BlocBuilder<AuthenticationBloc,AuthenticationState>(
-            builder: (BuildContext context, state) {
-              if(state is UnAuthenticated){
-                return LoginScreen();
-              }
-              else if(state is CustomerAuthenticated){
-                return CustomerHome();
-              }
-              else{
-                return SplashScreen();
-              }
-            },
-          ),),
+        theme: ThemeData(
+          primarySwatch: Colors.orange,
+        ),
+        home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+          builder: (BuildContext context, state) {
+            if (state is UnAuthenticated) {
+              return LoginScreen();
+            } else if (state is CustomerAuthenticated) {
+              return CustomerHome();
+            } else {
+              return SplashScreen();
+            }
+          },
+        ),
+      ),
     );
   }
 }

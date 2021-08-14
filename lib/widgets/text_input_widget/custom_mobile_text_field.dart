@@ -46,14 +46,12 @@ class CustomMobileTextField extends StatelessWidget {
               if (isNumeric(text) && text.length == 10) {
                 return null;
               } else {
-                Fluttertoast.showToast(
-                    msg: "Invalid mobile number",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIosWeb: 2,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0);
+                print("wrong");
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Invalid mobile number"),
+                  ),
+                );
                 return "";
               }
             }),

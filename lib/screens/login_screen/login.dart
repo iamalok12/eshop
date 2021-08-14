@@ -98,6 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
 class PhoneInput extends StatelessWidget {
   final _phoneController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Form(
