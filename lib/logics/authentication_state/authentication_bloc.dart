@@ -30,7 +30,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         }
         else{
           await _repo.auth.signOut();
-          yield UnAuthenticated();
+          yield LoggedInButNoRegistered();
         }
       }
     }

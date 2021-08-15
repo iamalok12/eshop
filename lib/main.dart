@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         ),
         home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: (BuildContext context, state) {
-            if (state is UnAuthenticated) {
+            if (state is UnAuthenticated||state is LoggedInButNoRegistered) {
               return LoginScreen();
             } else if (state is CustomerAuthenticated) {
               return CustomerHome();

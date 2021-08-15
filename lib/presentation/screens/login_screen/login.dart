@@ -74,7 +74,8 @@ class _LoginScreenState extends State<LoginScreen> {
               BlocConsumer<LoginBloc, LoginState>(
                 builder: (context, state) {
                   if (state is InitialLoginState ||
-                      state is LoginExceptionEvent) {
+                      state is ExceptionState ||
+                      state is AnotherNumberState) {
                     return PhoneInput();
                   } else {
                     return OtpInput();
@@ -96,16 +97,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         content: Text("Invalid Otp"),
                       ),
                     );
-                  }
-                  else if (state is ExceptionState) {
+                  } else if (state is ExceptionState) {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text("Server error please try after sometime"),
+                        content: Text(
+                          "Maximum attempt exceeded please try again after sometime",
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     );
-                  }
-                  else if (state is LoginCompleteState) {
+                  } else if (state is LoginCompleteState) {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => ChooseRole()));
                   } else if (state is CustomerAuth) {
@@ -116,6 +118,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   } else if (state is SellerAuth) {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => SellerHome()));
+                  } else if (state is AnotherNumberState) {
+                    return;
                   } else {
                     Navigator.pop(context);
                   }
@@ -133,6 +137,7 @@ class PhoneInput extends StatelessWidget {
   final _phoneController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TermAndCondition _termAndCondition = TermAndCondition();
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -204,8 +209,10 @@ class PhoneInput extends StatelessWidget {
 class OtpInput extends StatelessWidget {
   final _otp = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final LoginBloc _bloc=LoginBloc();
   @override
   Widget build(BuildContext context) {
+
     return Form(
       key: _formKey,
       child: Column(
@@ -213,13 +220,37 @@ class OtpInput extends StatelessWidget {
           CustomOtpTextField(
             controller: _otp,
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                onPressed: () {
+                  BlocProvider.of<LoginBloc>(context).add(TryAnotherNumber());
+                },
+                child: const Text("Try another number"),
+              ),
+              SizedBox(
+                width: 20.w,
+              ),
+              TextButton(
+                onPressed: () {
+                  BlocProvider.of<LoginBloc>(context).add(
+                    SendOtpEvent(
+                      phoNo: _bloc.number,//please add number from phone input here
+                    ),
+                  );
+                },
+                child: const Text("Resend"),
+              )
+            ],
+          ),
           SizedBox(
-            height: 20.h,
+            height: 15.h,
           ),
           SubmitArrowButton(
             callback: () {
               BlocProvider.of<LoginBloc>(context).add(
-                VerifyOtpEvent(otp: _otp.text),
+                VerifyOtpEvent(otp: "+91$_otp.text"),
               );
             },
           ),

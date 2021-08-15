@@ -11,4 +11,6 @@ class SellerAuthenticated extends AuthenticationState{}
 
 class CustomerAuthenticated extends AuthenticationState{}
 
+class LoggedInButNoRegistered extends AuthenticationState{}
+
 

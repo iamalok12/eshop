@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:eshop/data/authentication/authentication_repo.dart';
 import 'package:eshop/data/login/login_repo.dart';
-import 'package:eshop/logics/authentication_state/authentication_bloc.dart';
 import 'package:eshop/logics/logics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login_event.dart';
@@ -10,6 +9,7 @@ import 'login_state.dart';
 
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
+  String number="";
   LoginBloc() : super(InitialLoginState());
   final LoginRepo _repo=LoginRepo();
   final AuthRepo _authRepo=AuthRepo();
@@ -27,11 +27,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       subscription = sendOtp(event.phoNo).listen((event) {
         add(event);
       });
-    } else if (event is OtpSendEvent) {
+    }
+    else if (event is OtpSendEvent) {
       yield OtpSentState();
-    } else if (event is LoginCompleteEvent) {
+    }
+    else if(event is TryAnotherNumber){
+      yield AnotherNumberState();
+    }
+    else if (event is LoginCompleteEvent) {
       yield LoginCompleteState(event.firebaseUser);
-    } else if (event is LoginExceptionEvent) {
+    }
+    else if (event is LoginExceptionEvent) {
       yield ExceptionState(message: event.message);
     } else if (event is VerifyOtpEvent) {
       yield LoadingState();
@@ -50,7 +56,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           else{
             yield LoginCompleteState(result);
           }
-        } else {
+        }
+        else {
           yield OtpExceptionState(message: "Invalid otp!");
         }
       } catch (e) {
@@ -61,7 +68,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Stream<LoginEvent> sendOtp(String phoNo) async* {
-
+    number=phoNo;
     print(phoNo);
     final StreamController<LoginEvent> eventStream = StreamController();
     PhoneVerificationCompleted verified (AuthCredential authCredential) {

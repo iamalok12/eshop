@@ -15,6 +15,8 @@ class SendOtpEvent extends LoginEvent {
 
 class AppStartEvent extends LoginEvent {}
 
+class TryAnotherNumber extends LoginEvent {}
+
 class VerifyOtpEvent extends LoginEvent {
   final String otp;
 
