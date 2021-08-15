@@ -1,3 +1,7 @@
+import 'package:eshop/data/terms_condition/term_condition.dart';
+import 'package:eshop/presentation/screens/choose_role/choose_role.dart';
+import 'package:eshop/presentation/screens/customer_home/customer_home.dart';
+import 'package:eshop/presentation/screens/seller_home/seller_home.dart';
 import 'package:eshop/presentation/widgets/widgets.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -12,77 +16,104 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 60.h,
-            ),
-            Center(
-              child: Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(36.0),
-                  ),
-                  image: DecorationImage(
-                      image: AssetImage("assets/images/otp_logo.jpeg"),
-                      fit: BoxFit.fill),
-                ),
-                height: 235.h,
-                width: 299.w,
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/images/otp_login.png"),
+              fit: BoxFit.cover),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 60.h,
               ),
-            ),
-            SizedBox(
-              height: 30.h,
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 26, left: 30, right: 20, bottom: 20),
-                  child: RichText(
-                    text: TextSpan(
-                      text: "Get ",
-                      style: kViewStyle,
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: " Started",
-                          style: kViewStyle.copyWith(color: kBlueColor),
-                        ),
-                      ],
+              Center(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(36.0),
+                    ),
+                    image: DecorationImage(
+                      image: AssetImage("assets/images/otp_screen_top.gif"),
+                      fit: BoxFit.fill,
                     ),
                   ),
+                  height: 219.h,
+                  width: 244.w,
                 ),
-              ],
-            ),
-            SizedBox(
-              height: 15.h,
-            ),
-            BlocConsumer<LoginBloc, LoginState>(
-              builder: (context, state) {
-                if (state is InitialLoginState) {
-                  return PhoneInput();
-                } else if (state is OtpSentState) {
-                  return OtpInput();
-                } else if (state is LoadingState) {
-                  return const Text("Load");
-                }
-                else{
-                  return const Text("Success");
-                }
-              },
-              listener: (context,state){
-                if(state is LoadingState){
-                  showDialog(context: context, builder:(_){
-                    return CustomProgressIndicator();
-                  });
-                }
-                else {
-                  Navigator.pop(context);
-                }
-              },
-            ),
-          ],
+              ),
+              SizedBox(
+                height: 30.h,
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 26, left: 30, right: 20, bottom: 20),
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Get ",
+                        style: kViewStyle,
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: " Started",
+                            style: kViewStyle.copyWith(color: kBlueColor),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 15.h,
+              ),
+              BlocConsumer<LoginBloc, LoginState>(
+                builder: (context, state) {
+                  if (state is InitialLoginState ||
+                      state is LoginExceptionEvent) {
+                    return PhoneInput();
+                  } else {
+                    return OtpInput();
+                  }
+                },
+                listener: (context, state) {
+                  if (state is LoadingState) {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (_) {
+                        return CustomProgressIndicator();
+                      },
+                    );
+                  } else if (state is OtpExceptionState) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Invalid Otp"),
+                      ),
+                    );
+                  } else if (state is LoginCompleteState) {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => ChooseRole()));
+                  } else if (state is CustomerAuth) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CustomerHome()));
+                  } else if (state is SellerAuth) {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SellerHome()));
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -92,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
 class PhoneInput extends StatelessWidget {
   final _phoneController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  final TermAndCondition _termAndCondition = TermAndCondition();
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -103,13 +134,54 @@ class PhoneInput extends StatelessWidget {
             controller: _phoneController,
           ),
           SizedBox(
-            height: 20.h,
+            height: 10.h,
+          ),
+          TextButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (_) {
+                  return Center(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Card(
+                        color: Colors.black87,
+                        child: Padding(
+                          padding: EdgeInsets.all(8.w),
+                          child: Text(
+                            _termAndCondition.message,
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+            child: Card(
+              color: Colors.black12,
+              child: Padding(
+                padding: EdgeInsets.all(3.w),
+                child: const Text(
+                  "I agree with the terms of services and privacy policy",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
           ),
           SubmitArrowButton(
-            callback: (){
-              if(_formKey.currentState.validate()){
+            callback: () {
+              if (_formKey.currentState.validate()) {
                 BlocProvider.of<LoginBloc>(context).add(
-                  SendOtpEvent(phoNo: "+91${_phoneController.text}"),
+                  SendOtpEvent(
+                    phoNo: "+91${_phoneController.text}",
+                  ),
                 );
               }
             },
@@ -136,12 +208,12 @@ class OtpInput extends StatelessWidget {
             height: 20.h,
           ),
           SubmitArrowButton(
-            callback: (){
+            callback: () {
               BlocProvider.of<LoginBloc>(context).add(
-                VerifyOtpEvent(otp: _otp.text)
+                VerifyOtpEvent(otp: _otp.text),
               );
             },
-          )
+          ),
         ],
       ),
     );

@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:eshop/data/authentication/authentication_repo.dart';
 import 'package:eshop/data/login/login_repo.dart';
+import 'package:eshop/logics/authentication_state/authentication_bloc.dart';
+import 'package:eshop/logics/logics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login_event.dart';
 import 'login_state.dart';
@@ -9,6 +12,7 @@ import 'login_state.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(InitialLoginState());
   final LoginRepo _repo=LoginRepo();
+  final AuthRepo _authRepo=AuthRepo();
   StreamSubscription subscription;
   void dispose() {
     subscription.cancel();
@@ -35,7 +39,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         final User result =
         await _repo.verifyAndLogin(verID, event.otp);
         if (result != null) {
-          yield LoginCompleteState(result);
+          final String type=await _authRepo.type();
+          print(type);
+          if(type=="customer"){
+            yield CustomerAuth();
+          }
+          else if(type=="seller"){
+            yield SellerAuth();
+          }
+          else{
+            yield LoginCompleteState(result);
+          }
         } else {
           yield OtpExceptionState(message: "Invalid otp!");
         }

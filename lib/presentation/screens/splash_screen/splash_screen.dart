@@ -14,7 +14,9 @@ class SplashScreen extends StatelessWidget {
               ),
               Text(
                 "E-Shop",
-                style: GoogleFonts.orbitron(fontSize: 50.sp),
+                style: GoogleFonts.orbitron(
+                  fontSize: 50.sp,
+                ),
               ),
             ],
           ),

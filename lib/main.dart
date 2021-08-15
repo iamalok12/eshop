@@ -1,10 +1,9 @@
 import 'package:eshop/presentation/screens/screens.dart';
+import 'package:eshop/presentation/screens/seller_home/seller_home.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:eshop/logics/logics.dart';
 import 'package:eshop/models/models.dart';
-
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,6 +40,8 @@ class MyApp extends StatelessWidget {
               return LoginScreen();
             } else if (state is CustomerAuthenticated) {
               return CustomerHome();
+            } else if (state is SellerAuthenticated) {
+              return SellerHome();
             } else {
               return SplashScreen();
             }

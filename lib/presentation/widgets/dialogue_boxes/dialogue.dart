@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:rive/rive.dart';
+import 'package:lottie/lottie.dart';
 
 enum dialogueType {
   error,
@@ -24,9 +24,7 @@ class CustomDialogue extends StatelessWidget {
               SizedBox(
                 height: 80.h,
                 width: 80.h,
-                child: type == dialogueType.ok
-                    ? const RiveAnimation.asset('assets/icons/error.riv')
-                    : const RiveAnimation.asset('assets/icons/check.riv'),
+
               ),
               ElevatedButton(
                 onPressed: callback,

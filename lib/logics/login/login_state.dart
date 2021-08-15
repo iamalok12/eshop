@@ -7,7 +7,6 @@ abstract class LoginState extends Equatable {}
 
 class InitialLoginState extends LoginState {
   @override
-  // TODO: implement props
   List<Object> get props => [];
 }
 
@@ -44,7 +43,6 @@ class ExceptionState extends LoginState {
   ExceptionState({this.message});
 
   @override
-  // TODO: implement props
   List<Object> get props => [message];
 }
 
@@ -54,6 +52,14 @@ class OtpExceptionState extends LoginState {
   OtpExceptionState({this.message});
 
   @override
-  // TODO: implement props
   List<Object> get props => [message];
+}
+class CustomerAuth extends LoginState {
+  @override
+  List<Object> get props => [];
+}
+
+class SellerAuth extends LoginState {
+  @override
+  List<Object> get props => [];
 }
