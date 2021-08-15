@@ -210,7 +210,6 @@ class PhoneInput extends StatelessWidget {
 class OtpInput extends StatelessWidget {
   final _otp = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final LoginBloc _bloc=LoginBloc();
   @override
   Widget build(BuildContext context) {
 

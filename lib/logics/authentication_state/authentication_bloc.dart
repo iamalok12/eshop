@@ -15,7 +15,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     AuthenticationEvent event,
   ) async* {
     if(event is AppStarted){
-      final User user=await _repo.auth.currentUser;
+      final User user=_repo.auth.currentUser;
       if(user==null){
         yield UnAuthenticated();
       }
