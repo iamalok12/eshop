@@ -9,7 +9,6 @@ import 'login_state.dart';
 
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  String number="";
   LoginBloc() : super(InitialLoginState());
   final LoginRepo _repo=LoginRepo();
   final AuthRepo _authRepo=AuthRepo();
@@ -18,6 +17,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     subscription.cancel();
   }
   String verID = "";
+  String mobileNumber="";
   @override
   Stream<LoginState> mapEventToState(
       LoginEvent event,
@@ -33,6 +33,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
     else if(event is TryAnotherNumber){
       yield AnotherNumberState();
+    }
+    else if(event is OtpResendEvent){
+      yield LoadingState();
+      subscription = sendOtp(mobileNumber).listen((event) {
+        add(event);
+      });
     }
     else if (event is LoginCompleteEvent) {
       yield LoginCompleteState(event.firebaseUser);
@@ -68,7 +74,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Stream<LoginEvent> sendOtp(String phoNo) async* {
-    number=phoNo;
+    mobileNumber=phoNo;
     print(phoNo);
     final StreamController<LoginEvent> eventStream = StreamController();
     PhoneVerificationCompleted verified (AuthCredential authCredential) {

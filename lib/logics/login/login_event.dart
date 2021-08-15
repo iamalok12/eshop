@@ -27,6 +27,8 @@ class LogoutEvent extends LoginEvent {}
 
 class OtpSendEvent extends LoginEvent {}
 
+class OtpResendEvent extends LoginEvent {}
+
 class LoginCompleteEvent extends LoginEvent {
   final User firebaseUser;
   LoginCompleteEvent(this.firebaseUser);

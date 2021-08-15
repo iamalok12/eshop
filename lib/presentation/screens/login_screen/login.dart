@@ -1,4 +1,5 @@
 import 'package:eshop/data/terms_condition/term_condition.dart';
+import 'package:eshop/logics/login/login_bloc.dart';
 import 'package:eshop/presentation/screens/choose_role/choose_role.dart';
 import 'package:eshop/presentation/screens/customer_home/customer_home.dart';
 import 'package:eshop/presentation/screens/seller_home/seller_home.dart';
@@ -234,10 +235,9 @@ class OtpInput extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
+
                   BlocProvider.of<LoginBloc>(context).add(
-                    SendOtpEvent(
-                      phoNo: _bloc.number,//please add number from phone input here
-                    ),
+                    OtpResendEvent()
                   );
                 },
                 child: const Text("Resend"),
