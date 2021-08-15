@@ -7,7 +7,12 @@ class AuthRepo {
         .collection("users")
         .doc(auth.currentUser.phoneNumber)
         .get();
-    final String type = data.data()['type'].toString();
-    return type;
+    if(!data.exists){
+      return null;
+    }
+    else{
+      final String type = data.data()['type'].toString();
+      return type;
+    }
   }
 }

@@ -96,7 +96,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         content: Text("Invalid Otp"),
                       ),
                     );
-                  } else if (state is LoginCompleteState) {
+                  }
+                  else if (state is ExceptionState) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Server error please try after sometime"),
+                      ),
+                    );
+                  }
+                  else if (state is LoginCompleteState) {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => ChooseRole()));
                   } else if (state is CustomerAuth) {

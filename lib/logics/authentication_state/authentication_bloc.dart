@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:eshop/data/authentication/authentication_repo.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -14,7 +15,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     AuthenticationEvent event,
   ) async* {
     if(event is AppStarted){
-      if(_repo.auth.currentUser==null){
+      final User user=await _repo.auth.currentUser;
+      if(user==null){
         yield UnAuthenticated();
       }
       else{
@@ -23,8 +25,12 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         if(type=="customer"){
           yield CustomerAuthenticated();
         }
-        else{
+        else if(type=="seller"){
           yield SellerAuthenticated();
+        }
+        else{
+          await _repo.auth.signOut();
+          yield UnAuthenticated();
         }
       }
     }
