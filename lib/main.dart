@@ -1,3 +1,4 @@
+import 'package:eshop/presentation/screens/choose_role/choose_role.dart';
 import 'package:eshop/presentation/screens/screens.dart';
 import 'package:eshop/presentation/screens/seller_home/seller_home.dart';
 import 'package:eshop/utils/utils.dart';
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
         home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: (BuildContext context, state) {
             if (state is UnAuthenticated||state is LoggedInButNoRegistered) {
-              return LoginScreen();
+              return ChooseRole();
             } else if (state is CustomerAuthenticated) {
               return CustomerHome();
             } else if (state is SellerAuthenticated) {
