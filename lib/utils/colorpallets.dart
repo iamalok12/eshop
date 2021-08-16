@@ -10,3 +10,5 @@ Color kButtonColor = const Color(0xff7C83FD);
 Color kWhiteColor = const Color(0xffFFFFFF);
 
 Color kBlackColor = Colors.black;
+
+Color kChooseRoleButtonColor = const Color(0xff787A91);
