@@ -57,11 +57,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: RichText(
                       text: TextSpan(
                         text: "Get ",
-                        style: kViewStyle,
+                        style: kViewStyle.copyWith(color: Color(0xfff9f9f9)),
                         children: <TextSpan>[
                           TextSpan(
                             text: " Started",
-                            style: kViewStyle.copyWith(color: kBlueColor),
+                            style: kViewStyle.copyWith(color: Colors.black),
                           ),
                         ],
                       ),
