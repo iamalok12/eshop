@@ -17,7 +17,7 @@ class SubmitArrowButton extends StatelessWidget {
         ),
         child: Icon(
           Icons.arrow_forward_sharp,
-          color: kWhiteColor,
+          color: kbtWhiteColor,
           size: 24,
         ),
       ),
