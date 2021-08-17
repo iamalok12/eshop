@@ -30,14 +30,13 @@ class _ChooseRoleState extends State<ChooseRole> {
         child: Column(
           children: [
             SizedBox(
-              height: 10.h,
+              height: 57.h,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(
-                      top: 26, left: 30, right: 20, bottom: 20),
+                  padding: const EdgeInsets.only(left: 30, right: 20),
                   child: RichText(
                     text: TextSpan(
                       text: "What are",
@@ -53,11 +52,13 @@ class _ChooseRoleState extends State<ChooseRole> {
                 ),
               ],
             ),
+            SizedBox(
+              height: 31.h,
+            ),
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(
-                      top: 10, left: 30, right: 20, bottom: 20),
+                  padding: const EdgeInsets.only(left: 30, right: 20),
                   child: RichText(
                     text: TextSpan(
                       text: "Seller",
@@ -66,6 +67,9 @@ class _ChooseRoleState extends State<ChooseRole> {
                   ),
                 ),
               ],
+            ),
+            SizedBox(
+              height: 17.h,
             ),
             GestureDetector(
               onTap: (){
@@ -87,13 +91,12 @@ class _ChooseRoleState extends State<ChooseRole> {
               ),
             ),
             SizedBox(
-              height: 15.h,
+              height: 13.h,
             ),
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(
-                      top: 26, left: 30, right: 20, bottom: 20),
+                  padding: const EdgeInsets.only(left: 30, right: 20),
                   child: RichText(
                     text: TextSpan(
                       text: "Customer",
@@ -102,6 +105,9 @@ class _ChooseRoleState extends State<ChooseRole> {
                   ),
                 ),
               ],
+            ),
+            SizedBox(
+              height: 14.h,
             ),
             GestureDetector(
               onTap: (){
