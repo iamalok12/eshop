@@ -16,8 +16,8 @@ class CustomNameTextField extends StatelessWidget {
             Radius.circular(30.0),
           ),
           color: Colors.white),
-      width: 350.w,
-      height: 60.h,
+      width: 296.w,
+      height: 48.h,
       margin: const EdgeInsets.fromLTRB(20, 20, 20, 20),
       padding: const EdgeInsets.fromLTRB(10, 15, 10, 12),
       child: Theme(
