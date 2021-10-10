@@ -1,9 +1,7 @@
-import 'package:eshop/presentation/screens/choose_role/choose_role.dart';
-import 'package:eshop/presentation/screens/screens.dart';
-import 'package:eshop/presentation/screens/seller_home/seller_home.dart';
+import 'package:eshop/screens/authentication/seller_register1.dart';
+import 'package:eshop/screens/splash_screen/splash_screen.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:eshop/logics/logics.dart';
 import 'package:eshop/models/models.dart';
 
 Future<void> main() async {
@@ -11,18 +9,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
   Bloc.observer = MyBlocDelegate();
   runApp(
-    MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (BuildContext context) =>
-              AuthenticationBloc()..add(AppStarted()),
-        ),
-        BlocProvider(
-          create: (BuildContext context) => LoginBloc(),
-        )
-      ],
-      child: MyApp(),
-    ),
+    MyApp(),
   );
 }
 
@@ -35,19 +22,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           backgroundColor: kBackgroundColor,
         ),
-        home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-          builder: (BuildContext context, state) {
-            if (state is UnAuthenticated||state is LoggedInButNoRegistered) {
-              return LoginScreen();
-            } else if (state is CustomerAuthenticated) {
-              return CustomerHome();
-            } else if (state is SellerAuthenticated) {
-              return SellerHome();
-            } else {
-              return SplashScreen();
-            }
-          },
-        ),
+        home: SellerRegister1(),
       ),
     );
   }
