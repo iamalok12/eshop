@@ -9,6 +9,9 @@ class ChooseCityLoading extends ChooseCityState{}
 
 class ChooseCityError extends ChooseCityState{}
 
-class ChooseCityLoaded extends ChooseCityState{}
+class ChooseCityLoaded extends ChooseCityState{
+  final List<String> list;
+  ChooseCityLoaded(this.list);
+}
 
 

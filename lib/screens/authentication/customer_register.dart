@@ -1,5 +1,5 @@
 import 'package:eshop/models/master_model.dart';
-import 'package:eshop/screens/customer/customer_home.dart';
+import 'package:eshop/screens/customer/customer_home/customer_home.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:flutter/material.dart';
 

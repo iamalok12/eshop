@@ -1,8 +1,11 @@
-import 'package:eshop/screens/authentication/seller_register1.dart';
-import 'package:eshop/screens/splash_screen/splash_screen.dart';
+import 'package:eshop/models/models.dart';
+import 'package:eshop/screens/authentication/choose_plan.dart';
+import 'package:eshop/screens/authentication/seller_register2.dart';
+import 'package:eshop/screens/authentication/seller_register3.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:eshop/models/models.dart';
+
+import 'data/plans/plans.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +25,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           backgroundColor: kBackgroundColor,
         ),
-        home: SellerRegister1(),
+        home: SellerRegister2(),
       ),
     );
   }
