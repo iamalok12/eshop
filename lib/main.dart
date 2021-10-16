@@ -1,19 +1,15 @@
 import 'package:eshop/models/models.dart';
-import 'package:eshop/screens/authentication/choose_plan.dart';
+import 'package:eshop/screens/authentication/seller_register1.dart';
 import 'package:eshop/screens/authentication/seller_register2.dart';
-import 'package:eshop/screens/authentication/seller_register3.dart';
+import 'package:eshop/test_screen.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:flutter/material.dart';
-
-import 'data/plans/plans.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Bloc.observer = MyBlocDelegate();
-  runApp(
-    MyApp(),
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -22,10 +18,13 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(360, 640),
       builder: () => MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          backgroundColor: kBackgroundColor,
+          // scaffoldBackgroundColor: Colors.white12,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          // backgroundColor: Colors.lightBlueAccent,
         ),
-        home: SellerRegister2(),
+        home: SellerRegister1(),
       ),
     );
   }

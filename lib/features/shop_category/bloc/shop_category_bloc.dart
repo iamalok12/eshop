@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:eshop/data/shop_category/shop_category.dart';
+import 'package:eshop/features/shop_category/data/shop_category.dart';
 import 'package:meta/meta.dart';
-
 part 'shop_category_event.dart';
 part 'shop_category_state.dart';
 
