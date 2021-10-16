@@ -1,1 +1,2 @@
-export 'bloc_observer/bloc_observer.dart';
+//USE ONLY TO EXPORT
+export 'bloc_observer.dart';
