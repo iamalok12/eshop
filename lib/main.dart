@@ -2,6 +2,7 @@ import 'package:eshop/models/models.dart';
 import 'package:eshop/screens/authentication/seller_register1.dart';
 import 'package:eshop/screens/authentication/seller_register2.dart';
 import 'package:eshop/screens/authentication/seller_register3.dart';
+import 'package:eshop/screens/payment/payment_options.dart';
 import 'package:eshop/test_screen.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
           progressIndicatorTheme: const ProgressIndicatorThemeData(color: Colors.black),
           // backgroundColor: Colors.lightBlueAccent,
         ),
-        home: SellerRegister3(),
+        home: PaymentOptions(),
       ),
     );
   }

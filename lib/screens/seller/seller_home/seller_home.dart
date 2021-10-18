@@ -5,6 +5,10 @@ class SellerHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return const Scaffold(
+      body: SafeArea(
+        child: Text("Seller page"),
+      ),
+    );
   }
 }

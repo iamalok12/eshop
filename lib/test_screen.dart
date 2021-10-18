@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:eshop/widgets/alert/progress_indicator.dart';
+import 'package:eshop/widgets/buttons/payment_button.dart';
 import 'package:eshop/widgets/buttons/primary_button.dart';
 import 'package:eshop/widgets/buttons/secondary_button.dart';
 import 'package:eshop/widgets/image_upload/image_upload.dart';
@@ -32,16 +33,7 @@ class _TestScreenState extends State<TestScreen> {
             key: _formKey,
             child: Column(
               children: [
-                UploadImageWidget(
-                  image: image,
-                  callback: ()async{
-                    final File temp=await ImageUploader.addImage();
-                    setState((){
-                      image=temp;
-                    });
-                    // print(image.path);
-                  },
-                )
+                PaymentBox(month: "gaged",amount: 77,callback: (){},)
               ],
             ),
           ),

@@ -53,7 +53,7 @@ class _SellerRegister1State extends State<SellerRegister1> {
                     height: 40.h,
                     decoration: BoxDecoration(
                         border: Border.all(width: 2),
-                        borderRadius: BorderRadius.circular(5)
+                        borderRadius: BorderRadius.circular(5),
                     ),
                     child: BlocProvider(
                       create: (context) =>
