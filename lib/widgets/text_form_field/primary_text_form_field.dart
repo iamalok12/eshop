@@ -30,7 +30,7 @@ class PrimaryTextField extends StatelessWidget {
         validator: (value){
           if(textFieldOptions==PrimaryTextFieldOptions.name){
             if(value.length<4){
-              return "Name is too short";
+              return "Input is too short";
             }
             else{
               return null;

@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:eshop/widgets/alert/progress_indicator.dart';
 import 'package:eshop/widgets/buttons/primary_button.dart';
 import 'package:eshop/widgets/buttons/secondary_button.dart';
+import 'package:eshop/widgets/image_upload/image_upload.dart';
 import 'package:eshop/widgets/text_form_field/primary_text_form_field.dart';
 import 'package:flutter/material.dart';
+
+import 'models/image_upload_and_crop.dart';
 
 class TestScreen extends StatefulWidget {
   @override
@@ -12,55 +17,35 @@ class TestScreen extends StatefulWidget {
 class _TestScreenState extends State<TestScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  final texter = TextEditingController();
+  final texTer = TextEditingController();
   @override
   void initState() {
     super.initState();
   }
-
+  File image;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Center(
-            child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              PrimaryTextField(
-                controller: texter,
-                label: "Zip code",
-                keyboardType: TextInputType.number,
-                textFieldOptions: PrimaryTextFieldOptions.mobile,
-              ),
-              PrimaryButton(
-                label: "Submit",
-                callback: () {
-                  showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (_) {
-                        return LoadingIndicator();
-                      });
-                },
-              ),
-              const SecondaryButton(
-                label: "cancel",
-              ),
-              DropdownButton<String>(
-                hint: Text("asas"),
-                underline: Text(""),
-                items: <String>['A', 'B', 'C', 'D'].map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (_) {},
-              )
-            ],
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                UploadImageWidget(
+                  image: image,
+                  callback: ()async{
+                    final File temp=await ImageUploader.addImage();
+                    setState((){
+                      image=temp;
+                    });
+                    // print(image.path);
+                  },
+                )
+              ],
+            ),
           ),
-        )),
+        ),
       ),
     );
   }

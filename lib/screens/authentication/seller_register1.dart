@@ -103,7 +103,7 @@ class _SellerRegister1State extends State<SellerRegister1> {
                     if(_formKey.currentState.validate()&& shopType!="Category"){
                       try{
                         LoadingWidget.showLoading(context);
-                        await FirebaseFirestore.instance.collection('users').doc("sdsdsd").set({
+                        await FirebaseFirestore.instance.collection('users').doc("sdsdsd").set({//todo modify path
                           "name":sellerName.text.trim(),
                           "shopName":sellerName.text.trim(),
                           "category":shopType

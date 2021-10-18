@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eshop/features/choose_city/bloc/choose_city_bloc.dart';
 import 'package:eshop/features/shop_category/bloc/shop_category_bloc.dart';
 import 'package:eshop/models/error_handler.dart';
+import 'package:eshop/models/loading.dart';
 import 'package:eshop/models/master_model.dart';
 import 'package:eshop/screens/authentication/seller_register3.dart';
 import 'package:eshop/widgets/buttons/primary_button.dart';
@@ -109,12 +110,14 @@ class _SellerRegister2State extends State<SellerRegister2> {
                   PrimaryButton(label: "Next",callback: ()async{
                     if(_formKey.currentState.validate()&& chooseCity!="Category"){
                       try{
+                        LoadingWidget.showLoading(context);
                         await FirebaseFirestore.instance.collection('users').doc(MasterModel.auth.currentUser.email).set({
                           "city":chooseCity,
                           "locality":locality.text.trim(),
                           "area": area.text.trim(),
                           "pinCode":pinCode.text.trim()
                         }).then((value) {
+                          LoadingWidget.removeLoading(context);
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SellerRegister3(),),);
                         });
                         print("success");
@@ -124,7 +127,7 @@ class _SellerRegister2State extends State<SellerRegister2> {
                       }
                     }
                     else{
-                      ErrorHandle.showError("Please choose category");
+                      ErrorHandle.showError("Please choose city");
                     }
                   },)
                 ],
