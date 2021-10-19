@@ -34,6 +34,7 @@ dependencies:
   google_sign_in: ^5.1.1
   image_cropper: ^1.4.1
   image_picker: ^0.8.4+2
+  jiffy: ^4.1.0
   lottie: ^1.2.1
   razorpay_flutter: ^1.2.7
 

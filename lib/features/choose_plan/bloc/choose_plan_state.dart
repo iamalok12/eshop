@@ -9,7 +9,8 @@ class ChoosePlanLoading extends ChoosePlanState{}
 
 class ChoosePlanLoaded extends ChoosePlanState{
   final List<int> list;
-  ChoosePlanLoaded(this.list);
+  final String mobile;
+  ChoosePlanLoaded(this.list, this.mobile);
 }
 
 class ChoosePlanError extends ChoosePlanState{}

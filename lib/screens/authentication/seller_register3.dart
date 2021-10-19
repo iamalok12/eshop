@@ -2,9 +2,8 @@ import 'dart:io';
 import 'package:eshop/models/error_handler.dart';
 import 'package:eshop/models/image_upload_and_crop.dart';
 import 'package:eshop/models/loading.dart';
-import 'package:eshop/models/master_model.dart';
+import 'package:eshop/screens/seller/seller_home/seller_home.dart';
 import 'package:eshop/utils/utils.dart';
-import 'package:eshop/widgets/alert/progress_indicator.dart';
 import 'package:eshop/widgets/buttons/primary_button.dart';
 import 'package:eshop/widgets/image_upload/image_upload.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -15,8 +14,8 @@ class SellerRegister3 extends StatefulWidget {
   @override
   _SellerRegister3State createState() => _SellerRegister3State();
 }
-
 class _SellerRegister3State extends State<SellerRegister3> {
+
   File _image1;
   File _image2;
   File _image3;
@@ -120,10 +119,11 @@ class _SellerRegister3State extends State<SellerRegister3> {
                       "image2":url2,
                       "image3":url3,
                       "image4":url4,
-                      "type":"seller"
+                      "type":"seller",
+                      "validity":DateTime.now()
                     }).then((value) {
                       LoadingWidget.removeLoading(context);
-                      print("Success");
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SellerHome(),),);
                     });
                   });
                 }

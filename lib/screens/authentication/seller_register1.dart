@@ -19,6 +19,7 @@ class _SellerRegister1State extends State<SellerRegister1> {
   List<String> shopCategories = [];
   final sellerName=TextEditingController();
   final shopName=TextEditingController();
+  final mobileNumber=TextEditingController();
   String shopType="Category";
   final _formKey = GlobalKey<FormState>();
 
@@ -26,6 +27,7 @@ class _SellerRegister1State extends State<SellerRegister1> {
   void dispose() {
     sellerName.dispose();
     shopName.dispose();
+    mobileNumber.dispose();
     super.dispose();
   }
 
@@ -44,6 +46,8 @@ class _SellerRegister1State extends State<SellerRegister1> {
                   Text("Sign up",style: TextStyle(fontFamily: "Orbitron",fontSize: 30.sp),),
                   SizedBox(height: 25.h,),
                   PrimaryTextField(controller: sellerName, label: "Seller name", keyboardType: TextInputType.name, textFieldOptions:PrimaryTextFieldOptions.name),
+                  SizedBox(height: 25.h,),
+                  PrimaryTextField(controller: mobileNumber, label: "Seller mobile", keyboardType: TextInputType.number, textFieldOptions:PrimaryTextFieldOptions.mobile),
                   SizedBox(height: 25.h,),
                   PrimaryTextField(controller: shopName, label: "Shop name", keyboardType: TextInputType.streetAddress, textFieldOptions:PrimaryTextFieldOptions.name),
                   SizedBox(height: 25.h,),
@@ -106,6 +110,7 @@ class _SellerRegister1State extends State<SellerRegister1> {
                         await FirebaseFirestore.instance.collection('users').doc("sdsdsd").set({//todo modify path
                           "name":sellerName.text.trim(),
                           "shopName":sellerName.text.trim(),
+                          "mobile":mobileNumber.text.trim(),
                           "category":shopType
                         }).then((value) {
                           LoadingWidget.removeLoading(context);

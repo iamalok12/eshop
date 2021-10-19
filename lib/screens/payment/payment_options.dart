@@ -1,11 +1,14 @@
 import 'package:eshop/features/choose_plan/bloc/choose_plan_bloc.dart';
+import 'package:eshop/key/razor_pay_key.dart';
 import 'package:eshop/models/error_handler.dart';
+import 'package:eshop/models/master_model.dart';
 import 'package:eshop/screens/seller/seller_home/seller_home.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:eshop/widgets/buttons/payment_button.dart';
 import 'package:eshop/widgets/buttons/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class PaymentOptions extends StatefulWidget {
@@ -16,6 +19,7 @@ class PaymentOptions extends StatefulWidget {
 class _PaymentOptionsState extends State<PaymentOptions> {
   List<int> priceList=[];
   Razorpay _razorpay;
+  int month;
 
   @override
   void initState() {
@@ -32,13 +36,15 @@ class _PaymentOptionsState extends State<PaymentOptions> {
     _razorpay.clear();
   }
 
-  Future<void> doCheckout(int amount) async {
+  Future<void> doCheckout({int amount,String mobile, String email,int months}) async {
+    print("Mobile $mobile");
+    month=months;
     final options = {
-      'key': 'rzp_live_93RPI7e9Yl7d6z',
+      'key': razorPayKey,
       'amount': amount*100,
       'name': 'E-Shop',
       'description': 'Membership',
-      'prefill': {'contact': '7091175711', 'email': 'alok.kvbrp@gmail.com'},
+      'prefill': {'contact': mobile, 'email': email},
       'external': {
         'wallets': ['paytm']
       }
@@ -51,15 +57,21 @@ class _PaymentOptionsState extends State<PaymentOptions> {
     }
   }
 
-  void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    Fluttertoast.showToast(
-        msg: "SUCCESS: ${response.paymentId}", toastLength: Toast.LENGTH_SHORT,);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SellerHome(),),);
+  Future<void> _handlePaymentSuccess(PaymentSuccessResponse response)async {
+    final DateTime validity = Jiffy().add(months: month).dateTime;
+    await FirebaseFirestore.instance.collection('users').doc("alok.kvbrp@gmail.com").set({
+      "validity":validity
+    }).then((value){
+      Fluttertoast.showToast(
+        msg: "Payment successful, id: ${response.paymentId}", toastLength: Toast.LENGTH_SHORT,);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SellerHome(),),);
+    });
+    
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
     Fluttertoast.showToast(
-        msg: "ERROR: ${response.code} - ${response.message}",
+        msg: "ERROR: ${response.message}",
         toastLength: Toast.LENGTH_SHORT,);
   }
 
@@ -101,15 +113,15 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                         return Column(
                           children: [
                             PaymentBox(month: "1 month",amount: priceList[0],callback: (){
-                              doCheckout(priceList[0]);
+                              doCheckout(amount: priceList[0],mobile: state.mobile,email: MasterModel.auth.currentUser.email,months: 1);
                             },),
                             SizedBox(height: 25.h,),
                             PaymentBox(month: "6 months",amount: priceList[1],callback: (){
-                              doCheckout(priceList[1]);
+                              doCheckout(amount: priceList[1],mobile: state.mobile,email: "alok.kvbrp@gmail.com",months: 6);//todo
                             },),
                             SizedBox(height: 25.h,),
                             PaymentBox(month: "12 months",amount: priceList[2],callback: (){
-                              doCheckout(priceList[2]);
+                              doCheckout(amount: priceList[2],mobile: state.mobile,email: MasterModel.auth.currentUser.email,months: 12);
                             },),
                           ],
                         );
@@ -130,7 +142,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                           thickness: 3,
                         ),
                       ),
-                      Center(child: Container(height: 15.w,width: 30.w,color: Colors.white,child: const Center(child: Text("OR",style: TextStyle(fontSize: 15),)),))
+                      Center(child: Container(height: 15.w,width: 30.w,color: Colors.white,child: const Center(child: Text("OR",style: TextStyle(fontSize: 15),),),),)
                     ],
                   ),
                 ),
