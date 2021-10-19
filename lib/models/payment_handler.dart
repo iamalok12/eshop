@@ -1,15 +1,16 @@
+import 'package:eshop/key/razor_pay_key.dart';
 import 'package:flutter/material.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class PaymentHandler{
   final _razorpay = Razorpay();
-  Future<void> checkOut(int amount)async{
+  Future<void> checkOut(int amount,String mobile,String email)async{
     final options = {
-      'key': 'rzp_test_1DP5mmOlF5G5ag',
-      'amount': 2000,
-      'name': 'Acme Corp.',
-      'description': 'Fine T-Shirt',
-      'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'},
+      'key': razorPayKey,
+      'amount': amount*100,
+      'name': 'E Shop',
+      'description': 'Membership fee',
+      'prefill': {'contact': mobile, 'email': email},
       'external': {
         'wallets': ['paytm']
       }

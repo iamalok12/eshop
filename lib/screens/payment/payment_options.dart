@@ -34,7 +34,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
 
   Future<void> doCheckout(int amount) async {
     final options = {
-
+      'key': 'rzp_live_93RPI7e9Yl7d6z',
       'amount': amount*100,
       'name': 'E-Shop',
       'description': 'Membership',
