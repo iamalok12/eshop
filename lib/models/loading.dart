@@ -9,7 +9,7 @@ class LoadingWidget{
         barrierDismissible: false,
         builder: (_) {
           return LoadingIndicator();
-        });
+        },);
   }
   static void removeLoading(BuildContext context){
     Navigator.pop(context);

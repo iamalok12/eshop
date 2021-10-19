@@ -18,11 +18,11 @@ class PrimaryTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(2),
+      padding: const EdgeInsets.only(left: 5,right: 5,top: 2,bottom: 2),
       width: 260.w,
       decoration: BoxDecoration(
         border: Border.all(width: 2),
-        borderRadius: BorderRadius.circular(5)
+        borderRadius: BorderRadius.circular(5),
       ),
       child: TextFormField(
         controller: controller,
@@ -62,9 +62,8 @@ class PrimaryTextField extends StatelessWidget {
           }
         },
         decoration: InputDecoration(
-
           border: InputBorder.none,
-          hintText: "  $label"
+          hintText: label,
         ),
       ),
     );
