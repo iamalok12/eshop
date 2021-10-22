@@ -14,5 +14,3 @@ class ChooseCityLoaded extends ChooseCityState{
   ChooseCityLoaded(this.list);
 }
 
-
-

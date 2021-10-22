@@ -151,7 +151,6 @@ class _SellerRegister2State extends State<SellerRegister2> {
                               ),
                             );
                           });
-                          print("success");
                         } catch (e) {
                           ErrorHandle.showError("Something wrong");
                         }
@@ -159,7 +158,7 @@ class _SellerRegister2State extends State<SellerRegister2> {
                         ErrorHandle.showError("Please input all details");
                       }
                     },
-                  )
+                  ),
                 ],
               ),
             ),

@@ -1,7 +1,9 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
+
 import 'package:eshop/features/shop_category/data/shop_category.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 part 'shop_category_event.dart';
 part 'shop_category_state.dart';
 

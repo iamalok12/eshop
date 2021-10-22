@@ -106,7 +106,6 @@ class _SellerRegister3State extends State<SellerRegister3> {
                     uploadImage3(),
                     uploadImage4(),
                   ]).then((value) async {
-                    print("success");
                     await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).update({
                       "image1":url1,
                       "image2":url2,
@@ -121,7 +120,6 @@ class _SellerRegister3State extends State<SellerRegister3> {
                   });
                 }
                 catch(e){
-                  print(e);
                   ErrorHandle.showError("Something wrong");
                 }
               }

@@ -1,7 +1,9 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
+
 import 'package:eshop/features/choose_city/data/choose_city.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 part 'choose_city_event.dart';
 part 'choose_city_state.dart';
 

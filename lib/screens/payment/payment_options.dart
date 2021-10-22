@@ -167,21 +167,29 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                   try{
                     LoadingWidget.showLoading(context);
                     final data=await FirebaseFirestore.instance.collection("admin").doc("offer").get();
-                    if(couponCode.text.trim()!=data.data()['coupon']){
+                    if(data.exists){
+                      if(couponCode.text.trim()!=data.data()['coupon']){
+                        ErrorHandle.showError("Invalid code");
+                        await Future.delayed(const Duration(milliseconds: 100));
+                        if (!mounted) return;
+                        LoadingWidget.removeLoading(context);
+                      }
+                      else{
+                        final int numberOfMonths=data.data()['validity']as int;
+                        final DateTime validity = Jiffy().add(months: numberOfMonths).dateTime;
+                        await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).update({
+                          "validity":validity
+                        }).then((value){
+                          LoadingWidget.removeLoading(context);
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CouponAccepted(),),);
+                        });
+                      }
+                    }
+                    else{
                       ErrorHandle.showError("Invalid code");
                       await Future.delayed(const Duration(milliseconds: 100));
                       if (!mounted) return;
                       LoadingWidget.removeLoading(context);
-                    }
-                    else{
-                      final int numberOfMonths=data.data()['validity']as int;
-                      final DateTime validity = Jiffy().add(months: numberOfMonths).dateTime;
-                      await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).update({
-                        "validity":validity
-                      }).then((value){
-                        LoadingWidget.removeLoading(context);
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CouponAccepted(),),);
-                      });
                     }
                   }
                   catch(e){

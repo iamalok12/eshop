@@ -13,7 +13,7 @@ class SecondaryButton extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
             color: Colors.black,
-            borderRadius: BorderRadius.circular(6)
+            borderRadius: BorderRadius.circular(6),
         ),
         height: 35.h,
         width: 120.w,

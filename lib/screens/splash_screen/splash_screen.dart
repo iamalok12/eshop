@@ -9,36 +9,53 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
-  Future<void> goToScreen()async {
-    try{
-      final data=await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).get();
-      if(data.exists){
-        print("data found");
-        final String type=data.data()['type'] as String;
-        if(type=='customer'){
+  Future<void> goToScreen() async {
+    try {
+      final data = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(MasterModel.auth.currentUser.email)
+          .get();
+      if (data.exists) {
+        final String type = data.data()['type'] as String;
+        if (type == 'customer') {
           await Future.delayed(const Duration(milliseconds: 100));
           if (!mounted) return;
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CustomerHome(),),);
-        }
-        else if(type=='seller'){
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CustomerHome(),
+            ),
+          );
+        } else if (type == 'seller') {
           await Future.delayed(const Duration(milliseconds: 100));
           if (!mounted) return;
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SellerHome(),),);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SellerHome(),
+            ),
+          );
         }
-      }
-      else{
-        print("data not found");
+      } else {
         await MasterModel.signOut();
         await Future.delayed(const Duration(milliseconds: 100));
         if (!mounted) return;
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginScreen(),),);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LoginScreen(),
+          ),
+        );
       }
-    }
-    catch(e){
+    } catch (e) {
       await Future.delayed(const Duration(milliseconds: 100));
       if (!mounted) return;
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginScreen(),),);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ),
+      );
     }
   }
 
@@ -61,7 +78,9 @@ class _SplashScreenState extends State<SplashScreen> {
                   'E-Shop',
                   textStyle: kIntoAnimation,
                   rotateOut: false,
-                  duration: const Duration(milliseconds: 1000),
+                  duration: const Duration(
+                    milliseconds: 1000,
+                  ),
                 ),
               ],
             ),

@@ -113,7 +113,6 @@ class _SellerRegister1State extends State<SellerRegister1> {
                           LoadingWidget.removeLoading(context);
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SellerRegister2(),),);
                         });
-                        print("success");
                       }
                       catch(e){
                         ErrorHandle.showError("Something wrong");
