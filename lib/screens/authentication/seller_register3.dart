@@ -1,11 +1,8 @@
 import 'dart:io';
-import 'package:eshop/models/error_handler.dart';
-import 'package:eshop/models/image_upload_and_crop.dart';
-import 'package:eshop/models/loading.dart';
-import 'package:eshop/screens/seller/seller_home/seller_home.dart';
+import 'package:eshop/models/models.dart';
+import 'package:eshop/screens/screens.dart';
 import 'package:eshop/utils/utils.dart';
-import 'package:eshop/widgets/buttons/primary_button.dart';
-import 'package:eshop/widgets/image_upload/image_upload.dart';
+import 'package:eshop/widgets/widgets.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,24 +32,20 @@ class _SellerRegister3State extends State<SellerRegister3> {
     return downloadUrl;
   }//for uploading image and fetching url
   Future<void> uploadImage1()async{
-    Future.delayed(const Duration(microseconds: 1), () async {
-      url1=await uploadImageAndGetUrl(_image1);
-    });
+    await Future.delayed(const Duration(microseconds: 1));
+    url1=await uploadImageAndGetUrl(_image1);
   }
   Future<void> uploadImage2()async{
-    Future.delayed(const Duration(microseconds: 2), () async {
-      url2=await uploadImageAndGetUrl(_image2);
-    });
+    await Future.delayed(const Duration(microseconds: 2));
+    url2=await uploadImageAndGetUrl(_image2);
   }
   Future<void> uploadImage3()async{
-    Future.delayed(const Duration(microseconds: 3), () async {
-      url3=await uploadImageAndGetUrl(_image3);
-    });
+    await Future.delayed(const Duration(microseconds: 3));
+    url3=await uploadImageAndGetUrl(_image3);
   }
   Future<void> uploadImage4()async{
-    Future.delayed(const Duration(microseconds: 4), () async {
-      url4=await uploadImageAndGetUrl(_image4);
-    });
+    await Future.delayed(const Duration(microseconds: 4));
+    url4=await uploadImageAndGetUrl(_image4);
   }
 
   @override
@@ -62,7 +55,7 @@ class _SellerRegister3State extends State<SellerRegister3> {
         child: Column(
           children: [
             SizedBox(height: 25.h,),
-            Text("Add shop images",style: TextStyle(fontFamily: "Orbitron",fontSize: 30.sp),),
+            Text("Add shop images",style: kPageHeading),
             SizedBox(height: 55.h,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -114,7 +107,7 @@ class _SellerRegister3State extends State<SellerRegister3> {
                     uploadImage4(),
                   ]).then((value) async {
                     print("success");
-                    await FirebaseFirestore.instance.collection("users").doc("asasas").set({//todo modify path
+                    await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).update({
                       "image1":url1,
                       "image2":url2,
                       "image3":url3,

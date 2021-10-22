@@ -1,11 +1,8 @@
 import 'package:eshop/features/shop_category/bloc/shop_category_bloc.dart';
-import 'package:eshop/models/error_handler.dart';
-import 'package:eshop/models/loading.dart';
-import 'package:eshop/models/master_model.dart';
-import 'package:eshop/screens/authentication/seller_register2.dart';
+import 'package:eshop/models/models.dart';
+import 'package:eshop/screens/screens.dart';
 import 'package:eshop/utils/utils.dart';
-import 'package:eshop/widgets/buttons/primary_button.dart';
-import 'package:eshop/widgets/text_form_field/primary_text_form_field.dart';
+import 'package:eshop/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,7 +40,7 @@ class _SellerRegister1State extends State<SellerRegister1> {
               child: Column(
                 children: [
                   SizedBox(height:20.h ,),
-                  Text("Sign up",style: TextStyle(fontFamily: "Orbitron",fontSize: 30.sp),),
+                  Text("Sign up",style: kPageHeading,),
                   SizedBox(height: 25.h,),
                   PrimaryTextField(controller: sellerName, label: "Seller name", keyboardType: TextInputType.name, textFieldOptions:PrimaryTextFieldOptions.name),
                   SizedBox(height: 25.h,),
@@ -52,12 +49,12 @@ class _SellerRegister1State extends State<SellerRegister1> {
                   PrimaryTextField(controller: shopName, label: "Shop name", keyboardType: TextInputType.streetAddress, textFieldOptions:PrimaryTextFieldOptions.name),
                   SizedBox(height: 25.h,),
                   Container(
-                    padding: const EdgeInsets.all(2),
+                    padding: EdgeInsets.all(2.w),
                     width: 260.w,
                     height: 40.h,
                     decoration: BoxDecoration(
-                        border: Border.all(width: 2),
-                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(width: 2.w),
+                        borderRadius: BorderRadius.circular(5.w),
                     ),
                     child: BlocProvider(
                       create: (context) =>
@@ -107,7 +104,7 @@ class _SellerRegister1State extends State<SellerRegister1> {
                     if(_formKey.currentState.validate()&& shopType!="Category"){
                       try{
                         LoadingWidget.showLoading(context);
-                        await FirebaseFirestore.instance.collection('users').doc("sdsdsd").set({//todo modify path
+                        await FirebaseFirestore.instance.collection('users').doc(MasterModel.auth.currentUser.email).set({
                           "name":sellerName.text.trim(),
                           "shopName":sellerName.text.trim(),
                           "mobile":mobileNumber.text.trim(),

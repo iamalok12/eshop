@@ -1,3 +1,4 @@
+import 'package:eshop/models/master_model.dart';
 import 'package:eshop/screens/authentication/choose_role.dart';
 import 'package:eshop/screens/customer/customer_home/customer_home.dart';
 import 'package:eshop/screens/seller/seller_home/seller_home.dart';
@@ -7,7 +8,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  @override
+  void initState() {
+    try{
+      print(MasterModel.auth.currentUser.email);
+    }
+    catch(e){
+      print(e);
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,13 +35,9 @@ class LoginScreen extends StatelessWidget {
               SizedBox(
                 height: 150.h,
               ),
-              const Text(
+              Text(
                 "E-Shop",
-                style: TextStyle(
-                    color: Colors.black,
-                    letterSpacing: 3,
-                    fontFamily: "Horizon",
-                    fontSize: 60,),
+                style: kIntroStyle.copyWith(color: kBlack),
               ),
               SizedBox(
                 height: 160.h,
@@ -37,13 +50,19 @@ class LoginScreen extends StatelessWidget {
                       if(data.exists){
                         final String type=data.data()['type']as String;
                         if(type=='customer'){
+                          await Future.delayed(const Duration(milliseconds: 100));
+                          if (!mounted) return;
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CustomerHome(),),);
                         }
                         else{
+                          await Future.delayed(const Duration(milliseconds: 100));
+                          if (!mounted) return;
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SellerHome(),),);
                         }
                       }
                       else{
+                        await Future.delayed(const Duration(milliseconds: 100));
+                        if (!mounted) return;
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ChooseRole(),),);
                       }
                     }
@@ -63,8 +82,9 @@ class LoginScreen extends StatelessWidget {
                       );
                       print("Success");
                       await FirebaseAuth.instance
-                          .signInWithCredential(credential);
-                      fetchRoleAndNavigate(googleUser.email);
+                          .signInWithCredential(credential).then((value)async{
+                        await fetchRoleAndNavigate(googleUser.email);
+                      });
                     }
                     catch(e){
                       print(e);
@@ -78,10 +98,10 @@ class LoginScreen extends StatelessWidget {
                   child: Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(2),
+                        padding: EdgeInsets.all(2.w),
                         height: 38.w,
                         width: 38.w,
-                        color: Colors.white,
+                        color: kWhite,
                         child: Image.asset(
                           "assets/icons/sign_in_icon.png",
                           fit: BoxFit.fill,
@@ -92,7 +112,7 @@ class LoginScreen extends StatelessWidget {
                       ),
                       Text(
                         "Sign up with Google",
-                        style: TextStyle(fontSize: 18.sp),
+                        style: kGoogleButton,
                       ),
                     ],
                   ),

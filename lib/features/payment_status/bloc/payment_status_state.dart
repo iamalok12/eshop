@@ -10,8 +10,10 @@ class PaymentStatusLoading extends PaymentStatusState {}
 class PaymentStatusError extends PaymentStatusState {}
 
 class PaymentStatusWithOffer extends PaymentStatusState {
-  final String offerAddress;
-  PaymentStatusWithOffer(this.offerAddress);
+  final String imageAddress;
+  final String coupon;
+  final int validity;
+  PaymentStatusWithOffer(this.imageAddress, this.coupon, this.validity);
 }
 
 class PaymentStatusWithoutOffer extends PaymentStatusState {}

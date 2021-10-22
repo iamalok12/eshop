@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eshop/features/choose_city/bloc/choose_city_bloc.dart';
-import 'package:eshop/models/error_handler.dart';
-import 'package:eshop/models/loading.dart';
-import 'package:eshop/models/master_model.dart';
-import 'package:eshop/screens/authentication/seller_register3.dart';
-import 'package:eshop/widgets/buttons/primary_button.dart';
-import 'package:eshop/widgets/text_form_field/primary_text_form_field.dart';
+import 'package:eshop/models/models.dart';
+import 'package:eshop/screens/screens.dart';
+import 'package:eshop/utils/textstyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,7 +18,6 @@ class _SellerRegister2State extends State<SellerRegister2> {
   final locality = TextEditingController();
   final area = TextEditingController();
   final pinCode = TextEditingController();
-
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -47,18 +43,18 @@ class _SellerRegister2State extends State<SellerRegister2> {
                   ),
                   Text(
                     "Add details",
-                    style: TextStyle(fontFamily: "Orbitron", fontSize: 30.sp),
+                    style: kPageHeading,
                   ),
                   SizedBox(
                     height: 25.h,
                   ),
                   Container(
-                    padding: const EdgeInsets.all(2),
+                    padding: EdgeInsets.all(2.w),
                     width: 260.w,
                     height: 40.h,
                     decoration: BoxDecoration(
-                        border: Border.all(width: 2),
-                        borderRadius: BorderRadius.circular(5),),
+                        border: Border.all(width: 2.w),
+                        borderRadius: BorderRadius.circular(5.w),),
                     child: BlocProvider(
                       create: (context) =>
                           ChooseCityBloc()..add(ChooseCityInitialEvent()),
@@ -135,14 +131,13 @@ class _SellerRegister2State extends State<SellerRegister2> {
                   PrimaryButton(
                     label: "Next",
                     callback: () async {
-                      if (_formKey.currentState.validate() &&
-                          chooseCity != "Category") {
+                      if (_formKey.currentState.validate() && chooseCity != "Category") {
                         try {
                           LoadingWidget.showLoading(context);
                           await FirebaseFirestore.instance
                               .collection('users')
                               .doc(MasterModel.auth.currentUser.email)
-                              .set({
+                              .update({
                             "city": chooseCity,
                             "locality": locality.text.trim(),
                             "area": area.text.trim(),
@@ -161,7 +156,7 @@ class _SellerRegister2State extends State<SellerRegister2> {
                           ErrorHandle.showError("Something wrong");
                         }
                       } else {
-                        ErrorHandle.showError("Please choose city");
+                        ErrorHandle.showError("Please input all details");
                       }
                     },
                   )

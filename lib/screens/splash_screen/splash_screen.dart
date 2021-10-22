@@ -1,10 +1,6 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:eshop/models/master_model.dart';
-import 'package:eshop/screens/authentication/login_screen.dart';
-import 'package:eshop/screens/customer/customer_home/customer_home.dart';
-import 'package:eshop/screens/seller/seller_home/seller_home.dart';
+import 'package:eshop/models/models.dart';
+import 'package:eshop/screens/screens.dart';
 import 'package:eshop/utils/utils.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -21,19 +17,27 @@ class _SplashScreenState extends State<SplashScreen> {
         print("data found");
         final String type=data.data()['type'] as String;
         if(type=='customer'){
+          await Future.delayed(const Duration(milliseconds: 100));
+          if (!mounted) return;
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CustomerHome(),),);
         }
         else if(type=='seller'){
+          await Future.delayed(const Duration(milliseconds: 100));
+          if (!mounted) return;
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SellerHome(),),);
         }
       }
       else{
         print("data not found");
+        await MasterModel.signOut();
+        await Future.delayed(const Duration(milliseconds: 100));
+        if (!mounted) return;
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginScreen(),),);
       }
     }
     catch(e){
-      print("error");
+      await Future.delayed(const Duration(milliseconds: 100));
+      if (!mounted) return;
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginScreen(),),);
     }
   }
@@ -42,15 +46,12 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.black,
+        color: kBlack,
         height: double.infinity,
         width: double.infinity,
         child: Center(
           child: DefaultTextStyle(
-            style: const TextStyle(
-              fontSize: 60.0,
-              fontFamily: 'Horizon',
-            ),
+            style: kIntroStyle,
             child: AnimatedTextKit(
               pause: const Duration(milliseconds: 10),
               totalRepeatCount: 1,
@@ -58,9 +59,9 @@ class _SplashScreenState extends State<SplashScreen> {
               animatedTexts: [
                 RotateAnimatedText(
                   'E-Shop',
-                  textStyle: const TextStyle(color: Colors.white,letterSpacing: 3),
+                  textStyle: kIntoAnimation,
                   rotateOut: false,
-                  duration: const Duration(milliseconds: 1000)
+                  duration: const Duration(milliseconds: 1000),
                 ),
               ],
             ),
