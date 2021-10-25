@@ -250,31 +250,29 @@ class _SellerRootState extends State<SellerRoot> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PersistentTabView(
-        context,
-        controller: _controller,
-        screens: _buildScreens(),
-        items: _navBarsItems(),
-        resizeToAvoidBottomInset: true,
-        decoration: NavBarDecoration(
-          border: Border.all(color: Colors.black26),
-          borderRadius: BorderRadius.circular(10.0),
-          colorBehindNavBar: Colors.white,
-        ),
-        itemAnimationProperties: const ItemAnimationProperties(
-          duration: Duration(milliseconds: 200),
-          curve: Curves.ease,
-        ),
-        navBarStyle: NavBarStyle.style15,
+    return PersistentTabView(
+      context,
+      controller: _controller,
+      screens: _buildScreens(),
+      items: _navBarsItems(),
+      resizeToAvoidBottomInset: true,
+      decoration: NavBarDecoration(
+        border: Border.all(color: Colors.black26),
+        borderRadius: BorderRadius.circular(10.0),
+        colorBehindNavBar: Colors.white,
       ),
+      itemAnimationProperties: const ItemAnimationProperties(
+        duration: Duration(milliseconds: 200),
+        curve: Curves.ease,
+      ),
+      navBarStyle: NavBarStyle.style15,
     );
   }
   List<Widget> _buildScreens() {
     return [
       SellerHome(),
       EditItems(),
-      AddItems(),
+      AddItem(),
       SellerProfile(),
       LogoutSeller()
     ];

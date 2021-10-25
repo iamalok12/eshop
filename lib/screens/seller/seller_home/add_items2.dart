@@ -16,6 +16,7 @@ class AddItems2 extends StatefulWidget {
 }
 class _AddItems2State extends State<AddItems2> {
 
+
   File _image1;
   File _image2;
   File _image3;
@@ -102,7 +103,6 @@ class _AddItems2State extends State<AddItems2> {
             SizedBox(height: 160.h,),
             PrimaryButton(label: "Submit",callback: (){
               if(_image1!=null&&_image2!=null&&_image3!=null&&_image4!=null){
-                try{
                   LoadingWidget.showLoading(context);
                   Future.wait([   //calling all 4 function at the same time to avoid delay
                     uploadImage1(),
@@ -110,22 +110,19 @@ class _AddItems2State extends State<AddItems2> {
                     uploadImage3(),
                     uploadImage4(),
                   ]).then((value) async {
-                    await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).update({
+                    await FirebaseFirestore.instance.collection("Items").doc(widget.docID).update({
                       "image1":url1,
                       "image2":url2,
                       "image3":url3,
                       "image4":url4,
-                      "type":"seller",
-                      "validity":DateTime.now()
                     }).then((value) {
                       LoadingWidget.removeLoading(context);
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SellerRoot(),),);
+                    }).onError((error, stackTrace) {
+                      LoadingWidget.removeLoading(context);
+                      ErrorHandle.showError("Something wrong");
                     });
                   });
-                }
-                catch(e){
-                  ErrorHandle.showError("Something wrong");
-                }
               }
               else{
                 ErrorHandle.showError("Please add images");
