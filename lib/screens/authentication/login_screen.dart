@@ -1,7 +1,7 @@
 import 'package:eshop/models/master_model.dart';
 import 'package:eshop/screens/authentication/choose_role.dart';
 import 'package:eshop/screens/customer/customer_home/customer_home.dart';
-import 'package:eshop/screens/seller/seller_home/seller_home.dart';
+import 'package:eshop/screens/seller/seller_home/seller_root.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         else{
                           await Future.delayed(const Duration(milliseconds: 100));
                           if (!mounted) return;
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SellerHome(),),);
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SellerRoot(),),);
                         }
                       }
                       else{

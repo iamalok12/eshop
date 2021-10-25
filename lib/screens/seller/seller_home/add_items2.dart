@@ -1,17 +1,20 @@
 import 'dart:io';
+
 import 'package:eshop/models/models.dart';
-import 'package:eshop/screens/screens.dart';
+import 'package:eshop/screens/seller/seller_home/seller_root.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:eshop/widgets/widgets.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class SellerRegister3 extends StatefulWidget {
+
+class AddItems2 extends StatefulWidget {
+  final String docID;
+  const AddItems2({Key key, this.docID}) : super(key: key);
   @override
-  _SellerRegister3State createState() => _SellerRegister3State();
+  _AddItems2State createState() => _AddItems2State();
 }
-class _SellerRegister3State extends State<SellerRegister3> {
+class _AddItems2State extends State<AddItems2> {
 
   File _image1;
   File _image2;
@@ -24,7 +27,7 @@ class _SellerRegister3State extends State<SellerRegister3> {
   String url4;
 
   Future<String> uploadImageAndGetUrl(File image)async{
-    final Reference itemPicRef=FirebaseStorage.instance.ref().child("Seller shop pics");
+    final Reference itemPicRef=FirebaseStorage.instance.ref().child("Items pic");
     final String nameForPicture=DateTime.now().microsecondsSinceEpoch.toString();
     final UploadTask uploadTask=itemPicRef.child("$nameForPicture.jpg").putFile(image);
     final TaskSnapshot taskSnapshot =await uploadTask;
@@ -48,6 +51,7 @@ class _SellerRegister3State extends State<SellerRegister3> {
     url4=await uploadImageAndGetUrl(_image4);
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +59,7 @@ class _SellerRegister3State extends State<SellerRegister3> {
         child: Column(
           children: [
             SizedBox(height: 25.h,),
-            Text("Add shop images",style: kPageHeading),
+            Text("Add product images",style: kPageHeading),
             SizedBox(height: 55.h,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

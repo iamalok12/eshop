@@ -5,7 +5,8 @@ enum PrimaryTextFieldOptions{
   name,
   mobile,
   pinCode,
-  address
+  address,
+  price
 }
 
 class PrimaryTextField extends StatelessWidget {
@@ -52,6 +53,14 @@ class PrimaryTextField extends StatelessWidget {
               return null;
             }
           }
+          else if(textFieldOptions==PrimaryTextFieldOptions.price){
+            if(isNumericUsingTryParse(value)==false){
+              return "Invalid amount";
+            }
+            else{
+              return null;
+            }
+          }
           else{
             if(value.length<4){
               return "Address is too short";
@@ -67,5 +76,15 @@ class PrimaryTextField extends StatelessWidget {
         ),
       ),
     );
+  }
+  bool isNumericUsingTryParse(String string) {
+    if (string == null || string.isEmpty||string=='0') {
+      return false;
+    }
+    final number = num.tryParse(string);
+    if (number == null) {
+      return false;
+    }
+    return true;
   }
 }

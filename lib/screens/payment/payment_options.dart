@@ -62,7 +62,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
     }).then((value){
       Fluttertoast.showToast(
         msg: "Payment successful, id: ${response.paymentId}", toastLength: Toast.LENGTH_SHORT,);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SellerHome(),),);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SellerRoot(),),);
     });
     
   }
