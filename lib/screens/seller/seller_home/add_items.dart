@@ -74,44 +74,11 @@ class _AddItemState extends State<AddItem> {
                   label: "Next",
                   callback: () async {
                     if (_formKey.currentState.validate()) {
-                      showDialog(context: context, builder:(_){
-                        return LoadingIndicator();
-                      },);
-                      final String docID =
-                      DateTime.now().microsecondsSinceEpoch.toString();
-                      await FirebaseFirestore.instance
-                          .collection("Items")
-                          .doc(docID)
-                          .set({
-                        "productName": _productName.text.trim(),
-                        "productPrice": _productPrice.text.trim(),
-                        "productDescription": _productDescription.text.trim(),
-                        "seller": MasterModel.auth.currentUser.email,
-                      }).then((value) {
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) {
-                              return AddItem();
-                            },
-                          ),
-                              (_) => false,
-                        );
-                        pushNewScreen(
-                          context,
-                          screen: AddItems2(docID: docID),
-                          withNavBar: false,
-                        );
-                      }).onError((error, stackTrace) {
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) {
-                              return AddItem();
-                            },
-                          ),
-                              (_) => false,
-                        );
-                        ErrorHandle.showError("Something wrong");
-                      });
+                      pushNewScreen(
+                        context,
+                        screen: AddItems2(productName: _productName.text.trim(),productPrice: _productPrice.text.trim(),productDescription: _productDescription.text.trim(),),
+                        withNavBar: false,
+                      );
                     } else {
                       ErrorHandle.showError("Please fill properly");
                     }

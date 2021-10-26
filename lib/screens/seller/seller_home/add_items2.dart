@@ -9,8 +9,10 @@ import 'package:flutter/material.dart';
 
 
 class AddItems2 extends StatefulWidget {
-  final String docID;
-  const AddItems2({Key key, this.docID}) : super(key: key);
+  final String productName;
+  final String productPrice;
+  final String productDescription;
+  const AddItems2({Key key, this.productName, this.productPrice, this.productDescription}) : super(key: key);
   @override
   _AddItems2State createState() => _AddItems2State();
 }
@@ -110,13 +112,18 @@ class _AddItems2State extends State<AddItems2> {
                     uploadImage3(),
                     uploadImage4(),
                   ]).then((value) async {
-                    await FirebaseFirestore.instance.collection("Items").doc(widget.docID).update({
+                    await FirebaseFirestore.instance.collection("Items").doc().set({
+                      "productName":widget.productName,
+                      "productPrice":widget.productPrice,
+                      "productDescription":widget.productDescription,
+                      "isAvailable":true,
                       "image1":url1,
                       "image2":url2,
                       "image3":url3,
                       "image4":url4,
                     }).then((value) {
                       LoadingWidget.removeLoading(context);
+                      ErrorHandle.showError("Successfully added");
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SellerRoot(),),);
                     }).onError((error, stackTrace) {
                       LoadingWidget.removeLoading(context);
