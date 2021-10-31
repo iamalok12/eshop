@@ -3,7 +3,6 @@ import 'package:eshop/features/seller_profile/domain/seller_profile_class.dart';
 import 'package:eshop/models/error_handler.dart';
 import 'package:eshop/screens/authentication/seller_register3.dart';
 import 'package:eshop/utils/utils.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
@@ -124,7 +123,7 @@ class _SellerProfileState extends State<SellerProfile> {
                               ),
                               width: 280.w,
                               decoration: BoxDecoration(
-                                color: kPrimary,
+                                color: kBlack,
                                 borderRadius: BorderRadius.circular(8.w),
                               ),
                               child: Center(

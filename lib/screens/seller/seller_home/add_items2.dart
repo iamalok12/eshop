@@ -116,6 +116,7 @@ class _AddItems2State extends State<AddItems2> {
                       "productName":widget.productName,
                       "productPrice":widget.productPrice,
                       "productDescription":widget.productDescription,
+                      "seller":MasterModel.auth.currentUser.email,
                       "isAvailable":true,
                       "image1":url1,
                       "image2":url2,
