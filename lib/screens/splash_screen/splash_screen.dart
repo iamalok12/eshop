@@ -1,4 +1,5 @@
 import 'package:eshop/models/models.dart';
+import 'package:eshop/screens/customer/customer_home/customer_root.dart';
 import 'package:eshop/screens/screens.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => CustomerHome(),
+              builder: (context) => CustomerRoot(),
             ),
           );
         } else if (type == 'seller') {
