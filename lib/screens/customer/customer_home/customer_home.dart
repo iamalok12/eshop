@@ -2,6 +2,7 @@ import 'package:eshop/models/models.dart';
 import 'package:eshop/screens/authentication/login_screen.dart';
 import 'package:eshop/widgets/buttons/secondary_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomerHome extends StatelessWidget {
   @override
@@ -10,6 +11,7 @@ class CustomerHome extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: Column(
+            // mainAxisAlignment: MainAxisAlignment.end,
             children: [
               SecondaryButton(
                 label: "Sign out",
@@ -19,7 +21,15 @@ class CustomerHome extends StatelessWidget {
                   });
                 },
               ),
-              const Text("Customer home"),
+              // const Text("Customer home"),
+              SizedBox(height: 60.h,
+              ),
+              const Text('Customer Home',
+              style: TextStyle(
+                color: Colors.black12,
+                fontSize: 28,
+              ),
+              )
             ],
           ),
         ),

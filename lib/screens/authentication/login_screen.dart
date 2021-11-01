@@ -108,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       SizedBox(
-                        width: 20.w,
+                        width: 30.w,
                       ),
                       Text(
                         "Sign up with Google",
@@ -117,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
