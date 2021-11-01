@@ -5,8 +5,11 @@ class SellerItems{
   final String productDescription;
   final bool isAvailable;
   final String image1;
+  final String image2;
+  final String image3;
+  final String image4;
   final String id;
 
-  SellerItems({this.id,this.seller, this.productName, this.productPrice, this.productDescription, this.isAvailable, this.image1});
+  SellerItems({this.image2, this.image3, this.image4,this.id,this.seller, this.productName, this.productPrice, this.productDescription, this.isAvailable, this.image1});
 
 }

@@ -5,7 +5,7 @@ class ItemTile extends StatelessWidget {
 
   final int tileNumber;
   final String productName;
-  final int productPrice;
+  final double productPrice;
   final String productDescription;
   final bool isAvailable;
   final String image1;
@@ -55,7 +55,7 @@ class ItemTile extends StatelessWidget {
                   SizedBox(
                     height: 80.w,
                     width: 80.w,
-                    child: Image.network(image1),
+                    child: Image.network(image1,fit: BoxFit.cover,),
                   ),
                   SizedBox(width: 30.w,),
                   Column(

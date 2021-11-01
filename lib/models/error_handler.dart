@@ -12,7 +12,7 @@ class ErrorHandle{
         timeInSecForIosWeb: 2,
         backgroundColor: Colors.black,
         textColor: Colors.white,
-        fontSize: 16.0.sp
+        fontSize: 16.0.sp,
     );
   }
 }

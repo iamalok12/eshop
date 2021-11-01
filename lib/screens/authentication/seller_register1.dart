@@ -14,10 +14,10 @@ class SellerRegister1 extends StatefulWidget {
 
 class _SellerRegister1State extends State<SellerRegister1> {
   List<String> shopCategories = [];
-  final sellerName=TextEditingController();
-  final shopName=TextEditingController();
-  final mobileNumber=TextEditingController();
-  String shopType="Category";
+  final sellerName = TextEditingController();
+  final shopName = TextEditingController();
+  final mobileNumber = TextEditingController();
+  String shopType = "Category";
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -27,7 +27,6 @@ class _SellerRegister1State extends State<SellerRegister1> {
     mobileNumber.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -39,26 +38,54 @@ class _SellerRegister1State extends State<SellerRegister1> {
               key: _formKey,
               child: Column(
                 children: [
-                  SizedBox(height:20.h ,),
-                  Text("Sign up",style: kPageHeading,),
-                  SizedBox(height: 25.h,),
-                  PrimaryTextField(controller: sellerName, label: "Seller name", keyboardType: TextInputType.name, textFieldOptions:PrimaryTextFieldOptions.name),
-                  SizedBox(height: 25.h,),
-                  PrimaryTextField(controller: mobileNumber, label: "Seller mobile", keyboardType: TextInputType.number, textFieldOptions:PrimaryTextFieldOptions.mobile),
-                  SizedBox(height: 25.h,),
-                  PrimaryTextField(controller: shopName, label: "Shop name", keyboardType: TextInputType.streetAddress, textFieldOptions:PrimaryTextFieldOptions.name),
-                  SizedBox(height: 25.h,),
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  Text(
+                    "Sign up",
+                    style: kPageHeading,
+                  ),
+                  SizedBox(
+                    height: 25.h,
+                  ),
+                  PrimaryTextField(
+                    controller: sellerName,
+                    label: "Seller name",
+                    keyboardType: TextInputType.name,
+                    textFieldOptions: PrimaryTextFieldOptions.name,
+                  ),
+                  SizedBox(
+                    height: 25.h,
+                  ),
+                  PrimaryTextField(
+                    controller: mobileNumber,
+                    label: "Seller mobile",
+                    keyboardType: TextInputType.number,
+                    textFieldOptions: PrimaryTextFieldOptions.mobile,
+                  ),
+                  SizedBox(
+                    height: 25.h,
+                  ),
+                  PrimaryTextField(
+                    controller: shopName,
+                    label: "Shop name",
+                    keyboardType: TextInputType.streetAddress,
+                    textFieldOptions: PrimaryTextFieldOptions.name,
+                  ),
+                  SizedBox(
+                    height: 25.h,
+                  ),
                   Container(
                     padding: EdgeInsets.all(2.w),
                     width: 260.w,
                     height: 40.h,
                     decoration: BoxDecoration(
-                        border: Border.all(width: 2.w),
-                        borderRadius: BorderRadius.circular(5.w),
+                      border: Border.all(width: 2.w),
+                      borderRadius: BorderRadius.circular(5.w),
                     ),
                     child: BlocProvider(
                       create: (context) =>
-                      ShopCategoryBloc()..add(ShopCategoryInitial()),
+                          ShopCategoryBloc()..add(ShopCategoryInitial()),
                       child: BlocConsumer<ShopCategoryBloc, ShopCategoryState>(
                         listener: (context, state) {
                           if (state is ShopCategoryLoaded) {
@@ -66,14 +93,15 @@ class _SellerRegister1State extends State<SellerRegister1> {
                               shopCategories.clear();
                               shopCategories = state.list;
                             });
-                          }
-                          else if(state is ShopCategoryError){
+                          } else if (state is ShopCategoryError) {
                             ErrorHandle.showError("Something wrong");
                           }
                         },
                         builder: (context, state) {
                           if (state is ShopCategoryLoading) {
-                            return const Center(child: CircularProgressIndicator(),);
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
                           } else if (state is ShopCategoryLoaded) {
                             return DropdownButton<String>(
                               isExpanded: true,
@@ -88,40 +116,54 @@ class _SellerRegister1State extends State<SellerRegister1> {
                               }).toList(),
                               onChanged: (value) {
                                 setState(() {
-                                  shopType=value;
+                                  shopType = value;
                                 });
                               },
                             );
                           } else {
-                            return const Center(child: Text("Unable to fetch data"),);
+                            return const Center(
+                              child: Text("Unable to fetch data"),
+                            );
                           }
                         },
                       ),
                     ),
                   ),
-                  SizedBox(height: 160.h,),
-                  PrimaryButton(label: "Next",callback: ()async{
-                    if(_formKey.currentState.validate()&& shopType!="Category"){
-                      try{
-                        LoadingWidget.showLoading(context);
-                        await FirebaseFirestore.instance.collection('users').doc(MasterModel.auth.currentUser.email).set({
-                          "name":sellerName.text.trim(),
-                          "shopName":sellerName.text.trim(),
-                          "mobile":mobileNumber.text.trim(),
-                          "category":shopType
-                        }).then((value) {
-                          LoadingWidget.removeLoading(context);
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SellerRegister2(),),);
-                        });
+                  SizedBox(
+                    height: 160.h,
+                  ),
+                  PrimaryButton(
+                    label: "Next",
+                    callback: () async {
+                      if (_formKey.currentState.validate() &&
+                          shopType != "Category") {
+                        try {
+                          LoadingWidget.showLoading(context);
+                          await FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(MasterModel.auth.currentUser.email)
+                              .set({
+                            "name": sellerName.text.trim(),
+                            "shopName": sellerName.text.trim(),
+                            "mobile": mobileNumber.text.trim(),
+                            "category": shopType
+                          }).then((value) {
+                            LoadingWidget.removeLoading(context);
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SellerRegister2(),
+                              ),
+                            );
+                          });
+                        } catch (e) {
+                          ErrorHandle.showError("Something wrong");
+                        }
+                      } else {
+                        ErrorHandle.showError("Please choose category");
                       }
-                      catch(e){
-                        ErrorHandle.showError("Something wrong");
-                      }
-                    }
-                    else{
-                      ErrorHandle.showError("Please choose category");
-                    }
-                  },)
+                    },
+                  ),
                 ],
               ),
             ),

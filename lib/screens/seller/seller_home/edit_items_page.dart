@@ -1,7 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eshop/features/edit_items_seller/data/edit_items_repo.dart';
-import 'package:eshop/models/master_model.dart';
+import 'package:eshop/features/edit_items_seller/bloc/edit_items_bloc.dart';
+import 'package:eshop/models/error_handler.dart';
+import 'package:eshop/models/seller_items.dart';
 import 'package:eshop/utils/colorpallets.dart';
+import 'package:eshop/utils/utils.dart';
 import 'package:eshop/widgets/buttons/primary_button.dart';
 import 'package:eshop/widgets/buttons/secondary_button.dart';
 import 'package:eshop/widgets/items_tiles/item_tile.dart';
@@ -14,15 +15,49 @@ class EditItems extends StatefulWidget {
 }
 class _EditItemsState extends State<EditItems> {
 
-  final EditItemsRepo _repo=EditItemsRepo();
+  List<SellerItems> list=[];
+  List<SellerItems> searchList=[];
+  final _search=TextEditingController();
 
-  @override
-  void initState() {
-    _repo.fetchItems();
-    super.initState();
+  Future<void> onSearch(String text)async{
+    searchList.clear();
+    if(text.isEmpty){
+      setState(() {
+      });
+      return;
+    }
+    for (final element in list) {
+      if(element.productName.contains(text)) {
+        searchList.add(element);
+      }
+    }
+    setState(() {
+    });
   }
 
-
+  Widget mainBody(){
+    if(searchList.isNotEmpty && _search.text.isNotEmpty){
+      return ListView(
+        children:searchList.map((e){
+          final int index=list.indexOf(e);
+          return ItemTile(tileNumber: index,image1: e.image1,isAvailable: e.isAvailable,productName: e.productName,productPrice: e.productPrice,);
+        }).toList(),
+      );
+    }
+    else if(searchList.isEmpty && _search.text.isNotEmpty){
+      return const Center(
+        child: Text("No result found"),
+      );
+    }
+    else{
+      return ListView(
+        children:list.map((e){
+          final int index=list.indexOf(e);
+          return ItemTile(tileNumber: index,image1: e.image1,isAvailable: e.isAvailable,productName: e.productName,productPrice: e.productPrice,);
+        }).toList(),
+      );
+    }
+  }
 
 
   @override
@@ -42,6 +77,8 @@ class _EditItemsState extends State<EditItems> {
                 borderRadius: BorderRadius.circular(2.w),
               ),
               child: TextFormField(
+                controller: _search,
+                onChanged: onSearch,
                 textAlignVertical: TextAlignVertical.center,
                 decoration: const InputDecoration(
                   hintText: "Search items",
@@ -80,7 +117,7 @@ class _EditItemsState extends State<EditItems> {
                                   PrimaryButton(
                                     label: "Apply",
                                     callback: () {},
-                                  )
+                                  ),
                                 ],
                               ),
                             ),
@@ -99,15 +136,40 @@ class _EditItemsState extends State<EditItems> {
           ],
         ),
       ),
-      body: SafeArea(
-        child: ListView(
-          children: const [
-            ItemTile(tileNumber: 0,image1: "https://m.media-amazon.com/images/I/81idDmld6hL._SL1500_.jpg",isAvailable: true,productName: "Denver deo",productPrice: 450,),
-            ItemTile(tileNumber: 1,image1: "https://www.bigbasket.com/media/uploads/p/l/306926-2_4-amul-homogenised-toned-milk.jpg",isAvailable: false,productName: "Amul milk",productPrice: 50,),
-            ItemTile(tileNumber: 2,image1: "https://thumbs.dreamstime.com/b/bread-cut-14027607.jpg",isAvailable: false,productName: "Nirma bread",productPrice: 30,),
-            ItemTile(tileNumber: 3,image1: "https://www.simpleskincare.com/sk-eu/content/dam/brands/lifebuoy/specified_clusterscountries/2133643-lifebuoy-innovation-care-soap-wrapper-125g.png",isAvailable: true,productName: "Lifebuoy soap",productPrice: 20,),
-            ItemTile(tileNumber: 4,image1: "https://www.bigbasket.com/media/uploads/p/l/251014-2_7-thums-up-soft-drink.jpg",isAvailable: true,productName: "Thumbs up",productPrice: 40,),
-          ],
+      body: BlocProvider(
+        create: (context)=>EditItemsBloc()..add(EditItemsTrigger()),
+        child: BlocConsumer<EditItemsBloc,EditItemsState>(
+          builder: (context,state){
+            if(state is EditItemsLoading){
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            else if(state is EditItemsEmpty){
+              return const Center(
+                child: Text("No data"),
+              );
+            }
+            else if(state is EditItemsLoaded){
+              return SafeArea(
+                child: mainBody(),
+              );
+            }
+            else{
+              return const SizedBox();
+            }
+          },
+          listener: (context,state){
+            if(state is EditItemsError){
+              ErrorHandle.showError("Something wrong");
+            }
+            else if(state is EditItemsLoaded){
+              setState(() {
+                list.clear();
+                list=state.list;
+              });
+            }
+          },
         ),
       ),
     );
