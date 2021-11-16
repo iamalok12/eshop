@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:eshop/models/models.dart';
-import 'package:eshop/screens/seller/seller_home/seller_root.dart';
+import 'package:eshop/screens/seller/seller_root.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:eshop/widgets/widgets.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 
 class AddItems2 extends StatefulWidget {
   final String productName;
-  final String productPrice;
+  final double productPrice;
   final String productDescription;
   const AddItems2({Key key, this.productName, this.productPrice, this.productDescription}) : super(key: key);
   @override

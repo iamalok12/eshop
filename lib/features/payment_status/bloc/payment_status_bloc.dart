@@ -31,7 +31,6 @@ class PaymentStatusBloc extends Bloc<PaymentStatusEvent, PaymentStatusState> {
           }
         }
         catch(e){
-          print(e);
           yield PaymentStatusError();
         }
       }

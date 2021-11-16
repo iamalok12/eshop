@@ -22,6 +22,3 @@ TextStyle kPageHeading = TextStyle(
   fontSize: 30.sp,
   fontFamily: "Orbitron",
 );
-
-
-

@@ -13,4 +13,3 @@ class ChooseCityLoaded extends ChooseCityState{
   final List<String> list;
   ChooseCityLoaded(this.list);
 }
-

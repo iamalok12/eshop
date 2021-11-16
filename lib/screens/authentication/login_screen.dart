@@ -1,7 +1,7 @@
-import 'package:eshop/models/master_model.dart';
+import 'package:eshop/models/error_handler.dart';
 import 'package:eshop/screens/authentication/choose_role.dart';
-import 'package:eshop/screens/customer/customer_home/customer_home.dart';
-import 'package:eshop/screens/seller/seller_home/seller_root.dart';
+import 'package:eshop/screens/customer/customer_root.dart';
+import 'package:eshop/screens/seller/seller_root.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,16 +14,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  @override
-  void initState() {
-    try{
-      print(MasterModel.auth.currentUser.email);
-    }
-    catch(e){
-      print(e);
-    }
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         if(type=='customer'){
                           await Future.delayed(const Duration(milliseconds: 100));
                           if (!mounted) return;
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CustomerHome(),),);
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CustomerRoot(),),);
                         }
                         else{
                           await Future.delayed(const Duration(milliseconds: 100));
@@ -67,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       }
                     }
                     catch(e){
-                      print(e);
+                      ErrorHandle.showError("Something wrong");
                     }
                   }
                   Future<void> signInWithGoogle() async {
@@ -80,14 +70,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         accessToken: googleAuth?.accessToken,
                         idToken: googleAuth?.idToken,
                       );
-                      print("Success");
                       await FirebaseAuth.instance
                           .signInWithCredential(credential).then((value)async{
                         await fetchRoleAndNavigate(googleUser.email);
                       });
                     }
                     catch(e){
-                      print(e);
+                      ErrorHandle.showError("Something wrong");
                     }
                   }
                   signInWithGoogle();

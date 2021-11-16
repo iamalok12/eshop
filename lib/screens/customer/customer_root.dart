@@ -1,9 +1,10 @@
-import 'package:eshop/screens/customer/customer_home/customer_home.dart';
-import 'package:eshop/utils/colorpallets.dart';
+import 'package:eshop/screens/customer/customer_home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+
+import 'customer_profile.dart';
 
 
 
@@ -46,7 +47,7 @@ class _CustomerRootState extends State<CustomerRoot> {
       CustomerHome(),
       CustomerHome(),
       CustomerHome(),
-      CustomerHome(),
+      CustomerProfile(),
     ];
   }
   List<PersistentBottomNavBarItem> _navBarsItems() {
@@ -58,20 +59,20 @@ class _CustomerRootState extends State<CustomerRoot> {
         activeColorPrimary: Colors.blue,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.edit_outlined,size: 27.w,),
-        title: "Edit items",
+        icon: Icon(Icons.favorite,size: 27.w,),
+        title: "Favorites",
         inactiveColorPrimary: CupertinoColors.systemGrey,
         activeColorPrimary: Colors.green,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.perm_identity,size: 27.w,),
-        title: "Profile",
+        icon: Icon(Icons.shopping_cart,size: 27.w,),
+        title: "Cart",
         inactiveColorPrimary: CupertinoColors.systemGrey,
         activeColorPrimary: Colors.orange,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.logout,size: 27.w,),
-        title: "Logout",
+        icon: Icon(Icons.perm_identity,size: 27.w,),
+        title: "Profile",
         inactiveColorPrimary: CupertinoColors.systemGrey,
         activeColorPrimary: Colors.red,
       ),

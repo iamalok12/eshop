@@ -46,7 +46,7 @@ class _ChooseRoleState extends State<ChooseRole> {
                             width: role == 'customer' ? 3 : 1,
                             color: role == 'customer'
                                 ? Colors.black
-                                : Colors.black26),
+                                : Colors.black26,),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       height: 160.w,

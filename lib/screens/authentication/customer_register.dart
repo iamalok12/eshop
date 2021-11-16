@@ -1,5 +1,5 @@
 import 'package:eshop/models/models.dart';
-import 'package:eshop/screens/customer/customer_home/customer_home.dart';
+import 'package:eshop/screens/customer/customer_root.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:eshop/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -56,13 +56,16 @@ class CustomerRegister extends StatelessWidget {
                               .set({
                             "name": _customerName.text.trim(),
                             "mobile": _customerMobile.text.trim(),
-                            "type": "customer"
+                            "type": "customer",
+                            "cart":[],
+                            "wishList":[],
+                            "address":[]
                           }).then((value) {
                             LoadingWidget.removeLoading(context);
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => CustomerHome(),
+                                builder: (context) => CustomerRoot(),
                               ),
                             );
                           });

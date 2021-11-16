@@ -79,7 +79,7 @@ class SellerHome extends StatelessWidget {
                         );
                       },
                       icon: const Icon(
-                        Icons.filter_list_alt,
+                        Icons.sort,
                         color: kWhite,
                       ),
                     ),

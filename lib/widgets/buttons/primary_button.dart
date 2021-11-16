@@ -13,7 +13,7 @@ class PrimaryButton extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: const Color(0xff0066CC),
-          borderRadius: BorderRadius.circular(6)
+          borderRadius: BorderRadius.circular(6),
         ),
         height: 35.h,
         width: 120.w,

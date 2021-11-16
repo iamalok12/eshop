@@ -1,4 +1,4 @@
-import 'package:eshop/screens/seller/seller_home/seller_root.dart';
+import 'package:eshop/screens/seller/seller_root.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:eshop/widgets/buttons/primary_button.dart';
 import 'package:flutter/material.dart';

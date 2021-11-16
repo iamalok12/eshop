@@ -13,7 +13,3 @@ class SellerProfileLoaded extends SellerProfileState {
   final List<SellerProfileClass> list;
   SellerProfileLoaded(this.list);
 }
-
-
-
-

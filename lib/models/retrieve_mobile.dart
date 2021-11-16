@@ -3,9 +3,7 @@ import 'package:eshop/utils/utils.dart';
 
 class MobileNumber{
   Future<String> retrieveMobile()async{
-    final data=await FirebaseFirestore.instance.collection("users").doc("alok.kvbrp@gmail.com").get();
-    print(data.data()['mobile']);
+    final data=await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).get();
     return data.data()['mobile'] as String;
   }
 }
-//todo path dekho

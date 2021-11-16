@@ -1,9 +1,6 @@
-
-import 'package:eshop/models/master_model.dart';
 import 'package:eshop/models/models.dart';
 import 'package:eshop/utils/textstyles.dart';
 import 'package:eshop/utils/utils.dart';
-import 'package:eshop/widgets/alert/progress_indicator.dart';
 import 'package:eshop/widgets/buttons/primary_button.dart';
 import 'package:eshop/widgets/text_form_field/primary_text_form_field.dart';
 import 'package:flutter/cupertino.dart';
@@ -76,7 +73,7 @@ class _AddItemState extends State<AddItem> {
                     if (_formKey.currentState.validate()) {
                       pushNewScreen(
                         context,
-                        screen: AddItems2(productName: _productName.text.trim(),productPrice: _productPrice.text.trim(),productDescription: _productDescription.text.trim(),),
+                        screen: AddItems2(productName: _productName.text.trim(),productPrice:double.parse(_productPrice.text.trim()),productDescription: _productDescription.text.trim(),),
                         withNavBar: false,
                       );
                     } else {
