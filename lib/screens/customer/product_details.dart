@@ -1,8 +1,10 @@
 import 'package:eshop/models/error_handler.dart';
 import 'package:eshop/models/master_model.dart';
+import 'package:eshop/screens/customer/choose_address.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class ProductDetail extends StatelessWidget {
   final String image1;
@@ -16,7 +18,19 @@ class ProductDetail extends StatelessWidget {
   final String seller;
   final String productID;
 
-  const ProductDetail({Key key, this.image1, this.image2, this.image3, this.image4, this.productName, this.productPrice, this.productDescription, this.isAvailable, this.seller, this.productID}) : super(key: key);
+  const ProductDetail({
+    Key key,
+    this.image1,
+    this.image2,
+    this.image3,
+    this.image4,
+    this.productName,
+    this.productPrice,
+    this.productDescription,
+    this.isAvailable,
+    this.seller,
+    this.productID,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +49,12 @@ class ProductDetail extends StatelessWidget {
                     image2,
                     image3,
                     image4,
-                  ]
-                      .map((e) => Image.network(
-                            e,
-                            fit: BoxFit.fill,
-                          ),)
-                      .toList(),
+                  ].map(
+                        (e) => Image.network(
+                          e,
+                          fit: BoxFit.fill,
+                        ),
+                      ).toList(),
                 ),
               ),
               SizedBox(
@@ -126,7 +140,7 @@ class ProductDetail extends StatelessWidget {
                 height: 100.h,
                 width: 320.w,
                 decoration: BoxDecoration(
-                  border: Border.all(width: 2),
+                  border: Border.all(width: 2,color: Colors.black12,),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Center(
@@ -150,17 +164,23 @@ class ProductDetail extends StatelessWidget {
                         try {
                           final data = await FirebaseFirestore.instance
                               .collection("users")
-                              .doc(MasterModel.auth.currentUser.email)
-                              .get();
-                          final List<dynamic> list =
-                              data.data()['cart'] as List<dynamic>;
-                          list.add(productID);
-                          await FirebaseFirestore.instance
-                              .collection("users")
-                              .doc(MasterModel.auth.currentUser.email)
-                              .update({"cart": list}).then((value) {
-                            ErrorHandle.showError("Successfully added");
-                          });
+                              .doc(MasterModel.auth.currentUser.email).get();
+                          final Map<String,int> result=Map.from(data.data()['cart']as Map<String,dynamic>);
+                          if(result.keys.contains(productID)){
+                            int amount=result[productID];
+                            amount++;
+                            result[productID]=amount;
+                          }
+                          else {
+                            result[productID] = 1;
+                          }
+                            await FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(MasterModel.auth.currentUser.email).update({
+                              "cart":result
+                            }).then((value){
+                              ErrorHandle.showError("Added to cart");
+                            });
                         } catch (e) {
                           ErrorHandle.showError("Something wrong");
                         }
@@ -169,7 +189,29 @@ class ProductDetail extends StatelessWidget {
                       child: const Text("Add to cart"),
                     ),
                     ElevatedButton(
-                      onPressed: () async {},
+                      onPressed: () async {
+                        await FirebaseFirestore.instance.collection("Items").doc(productID).get().then((value){
+                          if(value.data()['isAvailable']==true){
+                            pushNewScreen(
+                              context,
+                              screen: ChooseAddressSingleOrder(
+                              image1:image1,
+                              image2:image2,
+                              image3:image3,
+                              image4:image4,
+                              productName:productName,
+                              productPrice:productPrice,
+                              productDescription:productDescription,
+                              seller:seller,
+                              productID:productID,
+                              ),
+                            );
+                          }
+                          else{
+                            ErrorHandle.showError("Out of stock");
+                          }
+                        });
+                      },
                       style: ElevatedButton.styleFrom(primary: kPrimary),
                       child: const Text("Buy now"),
                     ),

@@ -9,6 +9,4 @@ export 'package:eshop/screens/seller/logout_seller.dart';
 export 'package:eshop/screens/seller/seller_home.dart';
 export 'package:eshop/screens/seller/seller_profile.dart';
 export 'package:eshop/screens/seller/seller_root.dart';
-
-
 export 'splash_screen/splash_screen.dart';

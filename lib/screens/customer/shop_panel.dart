@@ -244,22 +244,36 @@ class ItemTiles extends StatelessWidget {
                 IconButton(
                   icon: Icon(
                     Icons.add_shopping_cart,
-                    color: Colors.green,
+                    color: isAvailable==true?Colors.green:Colors.red,
                     size: 30.w,
                   ),
                   onPressed: () async{
-                    try{
-                      final data=await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).get();
-                      final List<dynamic> list=data.data()['cart'] as List<dynamic>;
-                      list.add(productID);
-                      await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).update({
-                        "cart":list
-                      }).then((value){
-                        ErrorHandle.showError("Added to cart");
-                      });
+                    if(isAvailable){
+                      try{
+                        final data=await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).get();
+                        final Map<String,int> result=Map.from(data.data()['cart']as Map<String,dynamic>);
+                        if(result.keys.contains(productID)){
+                          int amount=result[productID];
+                          amount++;
+                          result[productID]=amount;
+                        }
+                        else {
+                          result[productID] = 1;
+                        }
+                        await FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(MasterModel.auth.currentUser.email).update({
+                          "cart":result
+                        }).then((value){
+                          ErrorHandle.showError("Added to cart");
+                        });
+                      }
+                      catch(e){
+                        ErrorHandle.showError("Something wrong");
+                      }
                     }
-                    catch(e){
-                      ErrorHandle.showError("Something wrong");
+                    else{
+                      ErrorHandle.showError("Out of stock");
                     }
                   },
                 )
