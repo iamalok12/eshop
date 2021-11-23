@@ -138,6 +138,7 @@ class _OrderPlaceState extends State<OrderPlace> {
                         "seller": widget.seller,
                         "customer": MasterModel.auth.currentUser.email,
                         "productId": widget.productID,
+                        "quantity":1,
                         "shipped":false,
                         "delivered":false
                       }).then((value) {

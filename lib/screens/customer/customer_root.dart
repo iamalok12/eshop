@@ -1,4 +1,5 @@
 import 'package:eshop/screens/customer/customer_home.dart';
+import 'package:eshop/screens/customer/shopping_cart.dart';
 import 'package:eshop/screens/customer/wishlist.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -46,8 +47,8 @@ class _CustomerRootState extends State<CustomerRoot> {
   List<Widget> _buildScreens() {
     return [
       CustomerHome(),
-      FavoriteItems(),
-      CustomerHome(),
+      WishList(),
+      ShoppingCart(),
       CustomerProfile(),
     ];
   }
