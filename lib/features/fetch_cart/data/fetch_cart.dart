@@ -19,11 +19,11 @@ class FetchCartRepo {
           productDescription: data.data()['productDescription'] as String,
           isAvailable: data.data()['isAvailable'] as bool,
           seller: data.data()['seller'] as String,
-          productID: data.id);
+          productID: data.id,);
       list.add(obj1);
     } else if (!data.exists) {
       final FetchCartClass obj2 =
-          FetchCartClass(productID: "product do not exist");
+          FetchCartClass(image1: "product do not exist",productID: productID);
       list.add(obj2);
     }
     return list;

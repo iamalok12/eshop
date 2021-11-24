@@ -1,4 +1,5 @@
 import 'package:eshop/features/fetch_cart/bloc/fetch_cart_bloc.dart';
+import 'package:eshop/models/customer_order.dart';
 import 'package:eshop/models/error_handler.dart';
 import 'package:eshop/models/master_model.dart';
 import 'package:eshop/screens/customer/product_details.dart';
@@ -6,13 +7,16 @@ import 'package:eshop/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-class ShoppingCart extends StatefulWidget {
+import 'choose_address.dart';
 
+class ShoppingCart extends StatefulWidget {
   @override
   _ShoppingCartState createState() => _ShoppingCartState();
 }
 
 class _ShoppingCartState extends State<ShoppingCart> {
+
+  Map<String, dynamic> maps={};
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,30 +30,40 @@ class _ShoppingCartState extends State<ShoppingCart> {
                   width: 330.w,
                   height: 480.h,
                   child: StreamBuilder(
-                    stream: FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).snapshots(),
-                    builder: (BuildContext context,AsyncSnapshot snap){
-                      if(!snap.hasData){
+                    stream: FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(MasterModel.auth.currentUser.email)
+                        .snapshots(),
+                    builder: (BuildContext context, AsyncSnapshot snap) {
+                      if (!snap.hasData) {
                         return const Center(
                           child: CircularProgressIndicator(),
                         );
-                      }
-                      else if(snap.hasError){
+                      } else if (snap.hasError) {
                         return const Center(
                           child: Text("Unable to load cart"),
                         );
-                      }
-                      else{
-                        final Map<String, dynamic> temp=snap.data['cart']as Map<String,dynamic>;
-                        final Map<String, dynamic> map = Map.fromEntries(temp.entries.toList()..sort((e1, e2) =>
-                            e1.key.compareTo(e2.key),),);
+                      } else {
+                        final Map<String, dynamic> temp =
+                            snap.data['cart'] as Map<String, dynamic>;
+                        final Map<String, dynamic> map = Map.fromEntries(
+                          temp.entries.toList()
+                            ..sort(
+                              (e1, e2) => e1.key.compareTo(e2.key),
+                            ),
+                        );
+                        maps=map;
                         return ListView.builder(
                           itemCount: map.length,
-                          itemBuilder: (_,index){
+                          itemBuilder: (_, index) {
                             return Center(
                               child: ShoppingCartTile(
                                 key: ObjectKey(map.entries.toList()[index].key),
                                 productID: map.entries.toList()[index].key,
-                                amount: map.entries.toList()[index].value.toString(),
+                                amount: map.entries
+                                    .toList()[index]
+                                    .value
+                                    .toString(),
                               ),
                             );
                           },
@@ -59,10 +73,65 @@ class _ShoppingCartState extends State<ShoppingCart> {
                   ),
                 ),
               ),
-              SizedBox(height: 20.h,),
-              ElevatedButton(onPressed: (){
-
-              },style: ElevatedButton.styleFrom(primary: kPrimary,fixedSize: Size(250.w,40.h)), child: Text("Checkout",style: TextStyle(fontSize: 15.sp),),)
+              SizedBox(
+                height: 20.h,
+              ),
+              ElevatedButton(
+                onPressed: ()async{
+                  try{
+                    bool allProductAvailable=true;
+                    final List<CustomerOrderClass> order=[];
+                    for (final element in maps.entries) {
+                     final data= await FirebaseFirestore.instance.collection("Items").doc(element.key).get();
+                     if(data.exists){
+                       if(data.data()['isAvailable']==false){
+                         allProductAvailable=false;
+                         ErrorHandle.showError("Remove out of stock items");
+                         break;
+                       }
+                       else{
+                         final CustomerOrderClass obj=CustomerOrderClass(
+                           image1: data.data()['image1'] as String,
+                           image2: data.data()['image2'] as String,
+                           productName: data.data()['productName'] as String,
+                           productID: element.key,
+                           productPrice: data.data()['productPrice'] as double,
+                           productDescription: data.data()['productDescription'] as String,
+                           seller: data.data()['seller'] as String,
+                           customerEmail: MasterModel.auth.currentUser.email,
+                           quantity: element.value as int,
+                         );
+                         order.add(obj);
+                       }
+                     }
+                     else{
+                       allProductAvailable=false;
+                       ErrorHandle.showError("Remove out of stock items");
+                       break;
+                     }
+                    }
+                    if(allProductAvailable==true){
+                      await Future.delayed(const Duration(milliseconds: 100));
+                      if (!mounted) return;
+                      pushNewScreen(
+                        context,
+                        screen: ChooseAddress(
+                          orderList: order,
+                        ),
+                      );
+                    }
+                  }
+                  catch(e){
+                    ErrorHandle.showError("Something wrong");
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                    primary: kPrimary, fixedSize: Size(250.w, 40.h),),
+                child: Text(
+                  "Checkout",
+                  style: TextStyle(fontSize: 15.sp),
+                ),
+              )
             ],
           ),
         ),
@@ -74,43 +143,78 @@ class _ShoppingCartState extends State<ShoppingCart> {
 class ShoppingCartTile extends StatelessWidget {
   final String productID;
   final String amount;
-  const ShoppingCartTile({Key key, this.productID,this.amount}) : super(key: key);
+  const ShoppingCartTile({Key key, this.productID, this.amount})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => FetchCartBloc()..add(FetchCartTriggerEvent(productID)),
+      create: (context) =>
+          FetchCartBloc()..add(FetchCartTriggerEvent(productID)),
       child: Card(
-        margin: EdgeInsets.only(bottom: 10.h,left: 5.w,right: 5.w),
+        margin: EdgeInsets.only(bottom: 10.h, left: 5.w, right: 5.w),
         elevation: 20,
         child: Container(
           padding: EdgeInsets.all(3.w),
           height: 120.h,
           width: 300.w,
-          child: BlocConsumer<FetchCartBloc,FetchCartState>(
-            listener: (context,state){},
-            builder: (context,state){
-              if(state is FetchCartLoading){
-                return const Center(child: CircularProgressIndicator(),);
-              }
-              else if (state is FetchCartEmpty){
-                return const Center(child: Text("Product removed by seller"),);
-              }
-              else if(state is FetchCartLoaded){
+          child: BlocConsumer<FetchCartBloc, FetchCartState>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              if (state is FetchCartLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (state is FetchCartEmpty) {
+                return SizedBox(
+                  height: 80.h,
+                  width: 280.w,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("Product removed by seller"),
+                      IconButton(
+                        onPressed: () async {
+                          try {
+                            final data = await FirebaseFirestore
+                                .instance
+                                .collection("users")
+                                .doc(MasterModel.auth.currentUser.email)
+                                .get();
+                            final Map<String, dynamic> map = data
+                                .data()['cart'] as Map<String, dynamic>;
+                            map.remove(state.productID);
+                            await FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(MasterModel.auth.currentUser.email)
+                                .update({"cart": map});
+                          } catch (e) {
+                            ErrorHandle.showError("Something wrong");
+                          }
+                        },
+                        icon: const Icon(Icons.delete),
+                      ),
+                    ],
+                  ),
+                );
+              } else if (state is FetchCartLoaded) {
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
-                    pushNewScreen(context, screen: ProductDetail(
-                      image1:state.list.first.image1,
-                      image2:state.list.first.image2,
-                      image3:state.list.first.image3,
-                      image4:state.list.first.image4,
-                      productName:state.list.first.productName,
-                      productPrice:state.list.first.productPrice,
-                      productDescription:state.list.first.productDescription,
-                      isAvailable:state.list.first.isAvailable,
-                      seller:state.list.first.seller,
-                      productID:state.list.first.productID,
-                    ),);
+                    pushNewScreen(
+                      context,
+                      screen: ProductDetail(
+                        image1: state.list.first.image1,
+                        image2: state.list.first.image2,
+                        image3: state.list.first.image3,
+                        image4: state.list.first.image4,
+                        productName: state.list.first.productName,
+                        productPrice: state.list.first.productPrice,
+                        productDescription: state.list.first.productDescription,
+                        isAvailable: state.list.first.isAvailable,
+                        seller: state.list.first.seller,
+                        productID: state.list.first.productID,
+                      ),
+                    );
                   },
                   child: SizedBox(
                     width: 80.h,
@@ -121,86 +225,128 @@ class ShoppingCartTile extends StatelessWidget {
                         SizedBox(
                           height: 80.w,
                           width: 80.w,
-                          child: Image.network(state.list.first.image1,fit: BoxFit.fill,),
+                          child: Image.network(
+                            state.list.first.image1,
+                            fit: BoxFit.fill,
+                          ),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("${state.list.first.productName}          X $amount",style: const TextStyle(color: Colors.blue),),
-                            SizedBox(height: 10.h,),
-                            Text("₹ ${state.list.first.productPrice.toString()}"),
-                            SizedBox(height: 10.h,),
-                            if (state.list.first.isAvailable==false) const Text("Out of stock",style: TextStyle(color: Colors.red),) else const SizedBox()
+                            Text(
+                              "${state.list.first.productName}          X $amount",
+                              style: const TextStyle(color: Colors.blue),
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            Text(
+                                "₹ ${(double.parse(amount)*state.list.first.productPrice).toString()}",),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            if (state.list.first.isAvailable == false)
+                              const Text(
+                                "Out of stock",
+                                style: TextStyle(color: Colors.red),
+                              )
+                            else
+                              const SizedBox()
                           ],
                         ),
                         SizedBox(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              if (state.list.first.isAvailable==true) IconButton(
-                                onPressed: ()async{
-                                  try{
-                                    final data=await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).get();
-                                    final Map<String, dynamic> map=data.data()['cart']as Map<String,dynamic>;
-                                    int amount=map[productID] as int;
-                                    if(amount<=4){
-                                      amount++;
+                              if (state.list.first.isAvailable == true)
+                                IconButton(
+                                  onPressed: () async {
+                                    try {
+                                      final data = await FirebaseFirestore
+                                          .instance
+                                          .collection("users")
+                                          .doc(MasterModel
+                                              .auth.currentUser.email,)
+                                          .get();
+                                      final Map<String, dynamic> map =
+                                          data.data()['cart']
+                                              as Map<String, dynamic>;
+                                      int amount = map[productID] as int;
+                                      if (amount <= 4) {
+                                        amount++;
+                                      } else {
+                                        ErrorHandle.showError("Limit exceeded");
+                                      }
+                                      map[productID] = amount;
+                                      await FirebaseFirestore.instance
+                                          .collection("users")
+                                          .doc(MasterModel
+                                              .auth.currentUser.email,)
+                                          .update({"cart": map});
+                                    } catch (e) {
+                                      ErrorHandle.showError("Something wrong");
                                     }
-                                    else{
-                                      ErrorHandle.showError("Limit exceeded");
-                                    }
-                                    map[productID]=amount;
-                                    await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).update({
-                                      "cart":map
-                                    });
-                                  }
-                                  catch(e){
-                                    ErrorHandle.showError("Something wrong");
-                                  }
-                                },
-                                icon: const Icon(Icons.add),
-                              ) else const SizedBox(),
+                                  },
+                                  icon: const Icon(Icons.add),
+                                )
+                              else
+                                const SizedBox(),
                               IconButton(
-                                onPressed: ()async{
-                                  try{
-                                    final data=await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).get();
-                                    final Map<String, dynamic> map=data.data()['cart']as Map<String,dynamic>;
+                                onPressed: () async {
+                                  try {
+                                    final data = await FirebaseFirestore
+                                        .instance
+                                        .collection("users")
+                                        .doc(MasterModel.auth.currentUser.email)
+                                        .get();
+                                    final Map<String, dynamic> map = data
+                                        .data()['cart'] as Map<String, dynamic>;
                                     map.remove(productID);
-                                    await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).update({
-                                      "cart":map
-                                    });
-                                  }
-                                  catch(e){
+                                    await FirebaseFirestore.instance
+                                        .collection("users")
+                                        .doc(MasterModel.auth.currentUser.email)
+                                        .update({"cart": map});
+                                  } catch (e) {
                                     ErrorHandle.showError("Something wrong");
                                   }
-
                                 },
                                 icon: const Icon(Icons.delete),
                               ),
-                              if (state.list.first.isAvailable==true) IconButton(
-                                onPressed: ()async{
-                                  try{
-                                    final data=await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).get();
-                                    final Map<String, dynamic> map=data.data()['cart']as Map<String,dynamic>;
-                                    int amount=map[productID] as int;
-                                    if(amount>=2){
-                                      amount--;
+                              if (state.list.first.isAvailable == true)
+                                IconButton(
+                                  onPressed: () async {
+                                    try {
+                                      final data = await FirebaseFirestore
+                                          .instance
+                                          .collection("users")
+                                          .doc(MasterModel
+                                              .auth.currentUser.email,)
+                                          .get();
+                                      final Map<String, dynamic> map =
+                                          data.data()['cart']
+                                              as Map<String, dynamic>;
+                                      int amount = map[productID] as int;
+                                      if (amount >= 2) {
+                                        amount--;
+                                      } else {
+                                        ErrorHandle.showError(
+                                            "Quantity can not be zero",);
+                                      }
+                                      map[productID] = amount;
+                                      await FirebaseFirestore.instance
+                                          .collection("users")
+                                          .doc(MasterModel
+                                              .auth.currentUser.email,)
+                                          .update({"cart": map});
+                                    } catch (e) {
+                                      ErrorHandle.showError("Something wrong");
                                     }
-                                    else{
-                                      ErrorHandle.showError("Quantity can not be zero");
-                                    }
-                                    map[productID]=amount;
-                                    await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).update({
-                                      "cart":map
-                                    });
-                                  }
-                                  catch(e){
-                                    ErrorHandle.showError("Something wrong");
-                                  }
-                                },
-                                icon: const Icon(Icons.remove),
-                              ) else const SizedBox(),
+                                  },
+                                  icon: const Icon(Icons.remove),
+                                )
+                              else
+                                const SizedBox(),
                             ],
                           ),
                         ),
@@ -208,9 +354,10 @@ class ShoppingCartTile extends StatelessWidget {
                     ),
                   ),
                 );
-              }
-              else{
-                return const Center(child: Text("Unable to fetch"),);
+              } else {
+                return const Center(
+                  child: Text("Unable to fetch"),
+                );
               }
             },
           ),

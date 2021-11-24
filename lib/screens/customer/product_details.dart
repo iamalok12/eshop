@@ -1,3 +1,4 @@
+import 'package:eshop/models/customer_order.dart';
 import 'package:eshop/models/error_handler.dart';
 import 'package:eshop/models/master_model.dart';
 import 'package:eshop/screens/customer/choose_address.dart';
@@ -202,18 +203,23 @@ class ProductDetail extends StatelessWidget {
                       onPressed: () async {
                         await FirebaseFirestore.instance.collection("Items").doc(productID).get().then((value){
                           if(value.data()['isAvailable']==true){
+                            final List<CustomerOrderClass> order=[];
+                            final CustomerOrderClass obj=CustomerOrderClass(
+                              image1: image1,
+                              image2: image2,
+                              productName: productName,
+                              productID: productID,
+                              productPrice: productPrice,
+                              productDescription: productDescription,
+                              seller: seller,
+                              customerEmail: MasterModel.auth.currentUser.email,
+                              quantity: 1,
+                            );
+                            order.add(obj);
                             pushNewScreen(
                               context,
-                              screen: ChooseAddressSingleOrder(
-                              image1:image1,
-                              image2:image2,
-                              image3:image3,
-                              image4:image4,
-                              productName:productName,
-                              productPrice:productPrice,
-                              productDescription:productDescription,
-                              seller:seller,
-                              productID:productID,
+                              screen: ChooseAddress(
+                              orderList: order,
                               ),
                             );
                           }

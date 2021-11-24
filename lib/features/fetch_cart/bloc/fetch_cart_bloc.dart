@@ -15,9 +15,8 @@ class FetchCartBloc extends Bloc<FetchCartEvent, FetchCartState> {
       yield FetchCartLoading();
       try{
         final List<FetchCartClass> list=await _repo.getCart(event.productID);
-        print("--*${list.first.isAvailable}");
-        if(list.first.productID=="product do not exist"){
-          yield FetchCartEmpty();
+        if(list.first.image1=="product do not exist"){
+          yield FetchCartEmpty(productID: list.first.productID);
         }
         else{
           yield FetchCartLoaded(list:list);

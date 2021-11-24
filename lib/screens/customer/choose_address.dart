@@ -1,3 +1,4 @@
+import 'package:eshop/models/customer_order.dart';
 import 'package:eshop/models/error_handler.dart';
 import 'package:eshop/models/master_model.dart';
 import 'package:eshop/screens/customer/order_place.dart';
@@ -10,16 +11,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-class ChooseAddressSingleOrder extends StatelessWidget{
-  final String image1;
-  final String image2;
-  final String image3;
-  final String image4;
-  final String productName;
-  final double productPrice;
-  final String productDescription;
-  final String seller;
-  final String productID;
+class ChooseAddress extends StatelessWidget{
+  final List<CustomerOrderClass> orderList;
 
   final _name = TextEditingController();
   final _area = TextEditingController();
@@ -28,17 +21,9 @@ class ChooseAddressSingleOrder extends StatelessWidget{
   final _pinCode = TextEditingController();
   final _mobile = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  ChooseAddressSingleOrder(
+  ChooseAddress(
       {Key key,
-      this.image1,
-      this.image2,
-      this.image3,
-      this.image4,
-      this.productName,
-      this.productPrice,
-      this.productDescription,
-      this.seller,
-      this.productID,})
+      this.orderList,})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -218,13 +203,7 @@ class ChooseAddressSingleOrder extends StatelessWidget{
                           .map(
                             (e) => AddressTile(
                               address: e.toString(),
-                              image1: image1,
-                              image2: image2,
-                              productName: productName,
-                              productPrice: productPrice,
-                              productDescription: productDescription,
-                              seller: seller,
-                              productID: productID,
+                              orderList: orderList,
                             ),
                           )
                           .toList(),
@@ -242,23 +221,11 @@ class ChooseAddressSingleOrder extends StatelessWidget{
 
 class AddressTile extends StatelessWidget {
   final String address;
-  final String image1;
-  final String image2;
-  final String productName;
-  final double productPrice;
-  final String productDescription;
-  final String seller;
-  final String productID;
+  final List<CustomerOrderClass> orderList;
   const AddressTile(
       {Key key,
       this.address,
-      this.image1,
-      this.image2,
-      this.productName,
-      this.productPrice,
-      this.productDescription,
-      this.seller,
-      this.productID,})
+      this.orderList,})
       : super(key: key);
 
   @override
@@ -286,13 +253,7 @@ class AddressTile extends StatelessWidget {
                     context,
                     screen: OrderPlace(
                     address:address,
-                    image1:image1,
-                    image2:image2,
-                    productName:productName,
-                    productPrice:productPrice,
-                    productDescription:productDescription,
-                    seller:seller,
-                    productID:productID,
+                    orderList: orderList,
                     ),
                   );
                 },
