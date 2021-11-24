@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-class ChooseAddressSingleOrder extends StatelessWidget {
+class ChooseAddressSingleOrder extends StatelessWidget{
   final String image1;
   final String image2;
   final String image3;

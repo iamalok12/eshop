@@ -254,7 +254,12 @@ class ItemTiles extends StatelessWidget {
                         final Map<String,int> result=Map.from(data.data()['cart']as Map<String,dynamic>);
                         if(result.keys.contains(productID)){
                           int amount=result[productID];
-                          amount++;
+                          if(amount<=4){
+                            amount++;
+                          }
+                          else{
+                            ErrorHandle.showError("Limit exceeded");
+                          }
                           result[productID]=amount;
                         }
                         else {

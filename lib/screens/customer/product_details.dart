@@ -161,19 +161,25 @@ class ProductDetail extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                        try {
-                          final data = await FirebaseFirestore.instance
-                              .collection("users")
-                              .doc(MasterModel.auth.currentUser.email).get();
-                          final Map<String,int> result=Map.from(data.data()['cart']as Map<String,dynamic>);
-                          if(result.keys.contains(productID)){
-                            int amount=result[productID];
-                            amount++;
-                            result[productID]=amount;
-                          }
-                          else {
-                            result[productID] = 1;
-                          }
+                        if(isAvailable){
+                          try {
+                            final data = await FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(MasterModel.auth.currentUser.email).get();
+                            final Map<String,int> result=Map.from(data.data()['cart']as Map<String,dynamic>);
+                            if(result.keys.contains(productID)){
+                              int amount=result[productID];
+                              if(amount<=4){
+                                amount++;
+                              }
+                              else{
+                                ErrorHandle.showError("Limit exceeded");
+                              }
+                              result[productID]=amount;
+                            }
+                            else {
+                              result[productID] = 1;
+                            }
                             await FirebaseFirestore.instance
                                 .collection("users")
                                 .doc(MasterModel.auth.currentUser.email).update({
@@ -181,8 +187,12 @@ class ProductDetail extends StatelessWidget {
                             }).then((value){
                               ErrorHandle.showError("Added to cart");
                             });
-                        } catch (e) {
-                          ErrorHandle.showError("Something wrong");
+                          } catch (e) {
+                            ErrorHandle.showError("Something wrong");
+                          }
+                        }
+                        else{
+                          ErrorHandle.showError("Out of stock");
                         }
                       },
                       style: ElevatedButton.styleFrom(primary: kBlack),
