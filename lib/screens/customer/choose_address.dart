@@ -1,6 +1,7 @@
 import 'package:eshop/models/customer_order.dart';
 import 'package:eshop/models/error_handler.dart';
 import 'package:eshop/models/master_model.dart';
+import 'package:eshop/models/models.dart';
 import 'package:eshop/screens/customer/order_place.dart';
 import 'package:eshop/utils/colorpallets.dart';
 import 'package:eshop/utils/utils.dart';
@@ -11,8 +12,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-class ChooseAddress extends StatelessWidget{
+class ChooseAddress extends StatelessWidget {
   final List<CustomerOrderClass> orderList;
+  final bool isNextButtonVisible;
+  final bool isCartToBeEmpty;
 
   final _name = TextEditingController();
   final _area = TextEditingController();
@@ -21,10 +24,12 @@ class ChooseAddress extends StatelessWidget{
   final _pinCode = TextEditingController();
   final _mobile = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  ChooseAddress(
-      {Key key,
-      this.orderList,})
-      : super(key: key);
+  ChooseAddress({
+    Key key,
+    this.isNextButtonVisible = true,
+    this.orderList,
+    this.isCartToBeEmpty,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -173,7 +178,7 @@ class ChooseAddress extends StatelessWidget{
       ),
       appBar: AppBar(
         backgroundColor: kBlack,
-        title: const Text("Choose shipping address"),
+        title: const Text("Shipping address"),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -198,15 +203,18 @@ class ChooseAddress extends StatelessWidget{
                       child: Text("No address found. Please add address"),
                     );
                   } else {
-                    return ListView(
-                      children: list
-                          .map(
-                            (e) => AddressTile(
-                              address: e.toString(),
-                              orderList: orderList,
-                            ),
-                          )
-                          .toList(),
+                    return ListView.builder(
+                      itemCount: list.length,
+                      itemBuilder: (_, index) {
+                        return AddressTile(
+                          key: ObjectKey(index),
+                          index: index,
+                          address: list[index].toString(),
+                          orderList: orderList,
+                          isNextButtonVisible: isNextButtonVisible,
+                          isCartHaveToBeEmpty: isCartToBeEmpty,
+                        );
+                      },
                     );
                   }
                 }
@@ -220,13 +228,19 @@ class ChooseAddress extends StatelessWidget{
 }
 
 class AddressTile extends StatelessWidget {
+  final bool isCartHaveToBeEmpty;
+  final int index;
   final String address;
+  final bool isNextButtonVisible;
   final List<CustomerOrderClass> orderList;
-  const AddressTile(
-      {Key key,
-      this.address,
-      this.orderList,})
-      : super(key: key);
+  const AddressTile({
+    Key key,
+    this.address,
+    this.index,
+    this.isCartHaveToBeEmpty,
+    this.isNextButtonVisible,
+    this.orderList,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -247,22 +261,45 @@ class AddressTile extends StatelessWidget {
                   textAlign: TextAlign.start,
                 ),
               ),
-              IconButton(
-                onPressed: () {
-                  pushNewScreen(
-                    context,
-                    screen: OrderPlace(
-                    address:address,
-                    orderList: orderList,
-                    ),
-                  );
-                },
-                icon: Icon(
-                  Icons.forward,
-                  size: 35.w,
-                  color: Colors.green,
+              if (isNextButtonVisible == true)
+                IconButton(
+                  onPressed: () {
+                    pushNewScreen(
+                      context,
+                      screen: OrderPlace(
+                        address: address,
+                        orderList: orderList,
+                        isCartHaveToEmpty:isCartHaveToBeEmpty,
+                      ),
+                    );
+                  },
+                  icon: Icon(
+                    Icons.forward,
+                    size: 35.w,
+                    color: Colors.green,
+                  ),
+                )
+              else
+                IconButton(
+                  onPressed: () async {
+                    try {
+                      final data = await FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(MasterModel.auth.currentUser.email)
+                          .get();
+                      final List<dynamic> addresses =
+                          data.data()['address'] as List<dynamic>;
+                      addresses.removeAt(index);
+                      await FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(MasterModel.auth.currentUser.email)
+                          .update({"address": addresses});
+                    } catch (e) {
+                      ErrorHandle.showError("Something wrong");
+                    }
+                  },
+                  icon: const Icon(Icons.delete),
                 ),
-              )
             ],
           ),
         ),

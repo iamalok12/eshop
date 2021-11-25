@@ -10,10 +10,12 @@ import 'package:lottie/lottie.dart';
 
 class OrderPlace extends StatefulWidget {
   final String address;
+  final bool isCartHaveToEmpty;
   final List<CustomerOrderClass> orderList;
   const OrderPlace({
     Key key,
     this.address,
+    this.isCartHaveToEmpty=false,
     this.orderList,
   }) : super(key: key);
   @override
@@ -100,7 +102,24 @@ class _OrderPlaceState extends State<OrderPlace> {
                             "productId": widget.orderList[i].productID,
                             "quantity":widget.orderList[i].quantity,
                             "shipped":false,
-                            "delivered":false
+                            "delivered":false,
+                            "cancelledBySeller":false,
+                            "cancelledByCustomer":false
+                          }).then((value)async{
+                            if(widget.isCartHaveToEmpty==true){
+                              final data = await FirebaseFirestore
+                                  .instance
+                                  .collection("users")
+                                  .doc(MasterModel.auth.currentUser.email)
+                                  .get();
+                              final Map<String, dynamic> map = data
+                                  .data()['cart'] as Map<String, dynamic>;
+                              map.remove(widget.orderList[i].productID);
+                              await FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(MasterModel.auth.currentUser.email)
+                                  .update({"cart": map});
+                            }
                           });
                         } else {
                           ErrorHandle.showError("Some product went out of stock while ordering");

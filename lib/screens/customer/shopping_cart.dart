@@ -117,6 +117,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                         context,
                         screen: ChooseAddress(
                           orderList: order,
+                          isCartToBeEmpty: true,
                         ),
                       );
                     }

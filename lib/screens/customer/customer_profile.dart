@@ -4,6 +4,9 @@ import 'package:eshop/utils/colorpallets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+
+import 'choose_address.dart';
 
 class CustomerProfile extends StatelessWidget {
 
@@ -109,20 +112,31 @@ class CustomerProfile extends StatelessWidget {
                         color: kBlack,
                         thickness: 0.5,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4,left: 5,right: 5,bottom: 4),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                const Icon(Icons.location_city,color: kPrimary,),
-                                SizedBox(width: 15.w,),
-                                Text('My Address',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20.sp),)
-                              ],
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: (){
+                          pushNewScreen(
+                            context,
+                            screen: ChooseAddress(
+                              isNextButtonVisible: false,
                             ),
-                            const Icon(Icons.keyboard_arrow_right,color: Colors.grey,)
-                          ],
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 4,left: 5,right: 5,bottom: 4),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(Icons.location_city,color: kPrimary,),
+                                  SizedBox(width: 15.w,),
+                                  Text('My Address',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20.sp),)
+                                ],
+                              ),
+                              const Icon(Icons.keyboard_arrow_right,color: Colors.grey,)
+                            ],
+                          ),
                         ),
                       ),
                       const Divider(
@@ -149,40 +163,40 @@ class CustomerProfile extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 20.h,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10,left: 5,right: 5),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.w),
-                  ),
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  margin: EdgeInsets.all(10.w),
-                  elevation: 10.h,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8,left: 5,right: 5,bottom: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                const Icon(Icons.settings,color: kPrimary,),
-                                SizedBox(width: 15.w,),
-                                Text('Settings',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20.sp),)
-                              ],
-                            ),
-                            const Icon(Icons.keyboard_arrow_right,color: Colors.grey,)
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )
+              // SizedBox(
+              //   height: 20.h,
+              // ),
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 10,left: 5,right: 5),
+              //   child: Card(
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(10.w),
+              //     ),
+              //     clipBehavior: Clip.antiAliasWithSaveLayer,
+              //     margin: EdgeInsets.all(10.w),
+              //     elevation: 10.h,
+              //     child: Column(
+              //       children: [
+              //         Padding(
+              //           padding: const EdgeInsets.only(top: 8,left: 5,right: 5,bottom: 8),
+              //           child: Row(
+              //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //             children: [
+              //               Row(
+              //                 children: [
+              //                   const Icon(Icons.settings,color: kPrimary,),
+              //                   SizedBox(width: 15.w,),
+              //                   Text('Settings',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20.sp),)
+              //                 ],
+              //               ),
+              //               const Icon(Icons.keyboard_arrow_right,color: Colors.grey,)
+              //             ],
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // )
             ],
           ),
         ),
