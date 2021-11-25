@@ -80,6 +80,7 @@ class WishlistTile extends StatelessWidget {
                       return GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         onTap: () {
+                          print(state.list.first.isAvailable);
                           pushNewScreen(context, screen: ProductDetail(
                             image1:state.list.first.image1,
                             image2:state.list.first.image2,
