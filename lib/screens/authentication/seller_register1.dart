@@ -3,6 +3,7 @@ import 'package:eshop/models/models.dart';
 import 'package:eshop/screens/screens.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:eshop/widgets/widgets.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,7 +20,13 @@ class _SellerRegister1State extends State<SellerRegister1> {
   final mobileNumber = TextEditingController();
   String shopType = "Category";
   final _formKey = GlobalKey<FormState>();
+  FirebaseMessaging messaging;
 
+  @override
+  void initState() {
+    messaging = FirebaseMessaging.instance;
+    super.initState();
+  }
   @override
   void dispose() {
     sellerName.dispose();
@@ -139,22 +146,27 @@ class _SellerRegister1State extends State<SellerRegister1> {
                           shopType != "Category") {
                         try {
                           LoadingWidget.showLoading(context);
-                          await FirebaseFirestore.instance
-                              .collection('users')
-                              .doc(MasterModel.auth.currentUser.email)
-                              .set({
-                            "name": sellerName.text.trim(),
-                            "shopName": sellerName.text.trim(),
-                            "mobile": mobileNumber.text.trim(),
-                            "category": shopType
-                          }).then((value) {
-                            LoadingWidget.removeLoading(context);
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SellerRegister2(),
-                              ),
-                            );
+                          final Map<String,dynamic> map={};
+                          messaging.getToken().then((value)async {
+                            await FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(MasterModel.auth.currentUser.email)
+                                .set({
+                              "name": sellerName.text.trim(),
+                              "shopName": sellerName.text.trim(),
+                              "mobile": mobileNumber.text.trim(),
+                              "category": shopType,
+                              "notificationKey":value,
+                              "notification":map
+                            }).then((value) {
+                              LoadingWidget.removeLoading(context);
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SellerRegister2(),
+                                ),
+                              );
+                            });
                           });
                         } catch (e) {
                           ErrorHandle.showError("Something wrong");

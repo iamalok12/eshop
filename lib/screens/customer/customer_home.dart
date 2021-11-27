@@ -4,12 +4,18 @@ import 'package:eshop/features/fetch_shops/domain/fetch_shop_class.dart';
 import 'package:eshop/models/error_handler.dart';
 import 'package:eshop/models/master_model.dart';
 import 'package:eshop/screens/customer/shop_panel.dart';
+import 'package:eshop/screens/seller/order_details.dart';
+import 'package:eshop/utils/app_constants.dart';
 import 'package:eshop/utils/colorpallets.dart';
 import 'package:eshop/utils/utils.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+
+import '../../main.dart';
 
 class CustomerHome extends StatefulWidget {
   @override
@@ -20,6 +26,55 @@ class _CustomerHomeState extends State<CustomerHome> {
   List<FetchShopsClass> shopList = [];
   List<String> cityList = [];
   String chooseCity = "Choose city";
+
+
+
+
+  FirebaseMessaging messaging;
+  @override
+  void initState() {
+    super.initState();
+    messaging = FirebaseMessaging.instance;
+    messaging.subscribeToTopic("customer");
+    messaging.getToken().then((value)async{
+      final data=await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).get();
+      if(data.data()['notificationKey']!=value){
+        await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).update({
+          'notificationKey':value
+        });
+      }
+    });
+    FirebaseMessaging.onMessage.listen((RemoteMessage event) async {
+      final data=await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).get();
+      final Map<String, dynamic> temp =
+      data.data()['notification'] as Map<String, dynamic>;
+      temp[DateTime.now().microsecondsSinceEpoch.toString()]=event.data['orderId'];
+      await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).update({
+        "notification":temp
+      });
+      final RemoteNotification notification = event.notification;
+      final AndroidNotification android = event.notification?.android;
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+          0,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              color: Colors.blue,
+              channelDescription: channel.description,
+              icon: '@mipmap/ic_launcher',
+            ),
+          ),
+        );
+      }
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      debugPrint("message read");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eshop/models/customer_order.dart';
 import 'package:eshop/models/error_handler.dart';
 import 'package:eshop/models/master_model.dart';
+import 'package:eshop/models/notification_trigger.dart';
+import 'package:eshop/models/order_model.dart';
 import 'package:eshop/screens/customer/customer_root.dart';
 import 'package:eshop/utils/colorpallets.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +17,7 @@ class OrderPlace extends StatefulWidget {
   const OrderPlace({
     Key key,
     this.address,
-    this.isCartHaveToEmpty=false,
+    this.isCartHaveToEmpty = false,
     this.orderList,
   }) : super(key: key);
   @override
@@ -23,6 +25,8 @@ class OrderPlace extends StatefulWidget {
 }
 
 class _OrderPlaceState extends State<OrderPlace> {
+  final NotificationTrigger _notificationTrigger=NotificationTrigger();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,9 +51,12 @@ class _OrderPlaceState extends State<OrderPlace> {
                   height: 100.h,
                   width: 300.w,
                   child: Center(
-                    child:Column(
+                    child: Column(
                       children: [
-                        Text("Address",style: TextStyle(color: Colors.blue,fontSize: 20.sp),),
+                        Text(
+                          "Address",
+                          style: TextStyle(color: Colors.blue, fontSize: 20.sp),
+                        ),
                         Text(widget.address),
                       ],
                     ),
@@ -66,12 +73,16 @@ class _OrderPlaceState extends State<OrderPlace> {
                   border: Border.all(color: Colors.black12),
                 ),
                 child: ListView(
-                  children: widget.orderList.map((e) => OrderTile(
-                    image1: e.image1,
-                    productName: e.productName,
-                    productPrice: e.productPrice,
-                    quantity: e.quantity,
-                  ),).toList(),
+                  children: widget.orderList
+                      .map(
+                        (e) => OrderTile(
+                          image1: e.image1,
+                          productName: e.productName,
+                          productPrice: e.productPrice,
+                          quantity: e.quantity,
+                        ),
+                      )
+                      .toList(),
                 ),
               ),
               SizedBox(
@@ -79,41 +90,47 @@ class _OrderPlaceState extends State<OrderPlace> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  try{
-                    for(int i=0;i<widget.orderList.length;i++){
+                  try {
+                    for (int i = 0; i < widget.orderList.length; i++) {
                       await FirebaseFirestore.instance
                           .collection("Items")
                           .doc(widget.orderList[i].productID)
                           .get()
                           .then((value) async {
                         if (value.data()['isAvailable'] == true) {
+                          final orderID=DateTime.now().microsecondsSinceEpoch.toString();
+                          final OrderModel model = OrderModel(
+                            address: widget.address,
+                            image1: widget.orderList[i].image1,
+                            image2: widget.orderList[i].image2,
+                            productName: widget.orderList[i].productName,
+                            productPrice: widget.orderList[i].productPrice,
+                            productDescription:
+                                widget.orderList[i].productDescription,
+                            seller: widget.orderList[i].seller,
+                            customer: MasterModel.auth.currentUser.email,
+                            productId: widget.orderList[i].productID,
+                            quantity: widget.orderList[i].quantity,
+                            shipped: false,
+                            delivered: false,
+                            cancelledBySeller: false,
+                            cancelledByCustomer: false,
+                            orderTime: DateTime.now(),
+                            orderId: orderID
+                          ,);
+                          _notificationTrigger.trigger(recipient:widget.orderList[i].seller,productID: widget.orderList[i].productID,title:"Order received",body:widget.orderList[i].productName,);
                           await FirebaseFirestore.instance
                               .collection("orders")
-                              .doc()
-                              .set({
-                            "address": widget.address,
-                            "image1": widget.orderList[i].image1,
-                            "image2": widget.orderList[i].image2,
-                            "productName": widget.orderList[i].productName,
-                            "productPrice": widget.orderList[i].productPrice,
-                            "productDescription": widget.orderList[i].productDescription,
-                            "seller": widget.orderList[i].seller,
-                            "customer": MasterModel.auth.currentUser.email,
-                            "productId": widget.orderList[i].productID,
-                            "quantity":widget.orderList[i].quantity,
-                            "shipped":false,
-                            "delivered":false,
-                            "cancelledBySeller":false,
-                            "cancelledByCustomer":false
-                          }).then((value)async{
-                            if(widget.isCartHaveToEmpty==true){
-                              final data = await FirebaseFirestore
-                                  .instance
+                              .doc(orderID)
+                              .set(model.toJson())
+                              .then((value) async {
+                            if (widget.isCartHaveToEmpty == true) {
+                              final data = await FirebaseFirestore.instance
                                   .collection("users")
                                   .doc(MasterModel.auth.currentUser.email)
                                   .get();
-                              final Map<String, dynamic> map = data
-                                  .data()['cart'] as Map<String, dynamic>;
+                              final Map<String, dynamic> map =
+                                  data.data()['cart'] as Map<String, dynamic>;
                               map.remove(widget.orderList[i].productID);
                               await FirebaseFirestore.instance
                                   .collection("users")
@@ -122,7 +139,8 @@ class _OrderPlaceState extends State<OrderPlace> {
                             }
                           });
                         } else {
-                          ErrorHandle.showError("Some product went out of stock while ordering");
+                          ErrorHandle.showError(
+                              "Some product went out of stock while ordering",);
                         }
                       });
                     }
@@ -139,19 +157,31 @@ class _OrderPlaceState extends State<OrderPlace> {
                               color: kWhite,
                               child: Center(
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Text("Success",style: TextStyle(fontSize: 25.sp),),
+                                    Text(
+                                      "Success",
+                                      style: TextStyle(fontSize: 25.sp),
+                                    ),
                                     SizedBox(
                                       height: 150.w,
                                       width: 150.w,
                                       child: Lottie.asset(
                                         "assets/images/success.json",
-                                        fit: BoxFit.fill,),
+                                        fit: BoxFit.fill,
+                                      ),
                                     ),
                                     ElevatedButton(
                                       onPressed: () {
-                                        Navigator.of(context, rootNavigator: true).pushReplacement(MaterialPageRoute(builder: (context) => CustomerRoot(),),);
+                                        Navigator.of(context,
+                                                rootNavigator: true,)
+                                            .pushReplacement(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                CustomerRoot(),
+                                          ),
+                                        );
                                       },
                                       style: ElevatedButton.styleFrom(
                                         fixedSize: Size(100.w, 20.h),
@@ -164,9 +194,9 @@ class _OrderPlaceState extends State<OrderPlace> {
                             ),
                           ),
                         );
-                      },);
-                  }
-                  catch(e){
+                      },
+                    );
+                  } catch (e) {
                     ErrorHandle.showError("Something wrong");
                   }
                 },
@@ -192,7 +222,13 @@ class OrderTile extends StatelessWidget {
   final String productName;
   final double productPrice;
   final int quantity;
-  const OrderTile({Key key, this.image1, this.productName, this.productPrice, this.quantity}) : super(key: key);
+  const OrderTile(
+      {Key key,
+      this.image1,
+      this.productName,
+      this.productPrice,
+      this.quantity,})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -205,15 +241,20 @@ class OrderTile extends StatelessWidget {
               SizedBox(
                 width: 80.w,
                 height: 80.w,
-                child: Image.network(image1,fit: BoxFit.fill,),
+                child: Image.network(
+                  image1,
+                  fit: BoxFit.fill,
+                ),
               ),
               SizedBox(
                 width: 170.w,
                 child: Column(
                   children: [
                     Text(productName),
-                    SizedBox(height: 10.h,),
-                    Text("₹ ${(productPrice*quantity).toString()}")
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Text("₹ ${(productPrice * quantity).toString()}")
                   ],
                 ),
               ),
