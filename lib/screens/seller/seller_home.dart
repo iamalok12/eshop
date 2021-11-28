@@ -2,17 +2,15 @@ import 'package:eshop/features/fetch_orders/bloc/fetch_order_seller_bloc.dart';
 import 'package:eshop/models/error_handler.dart';
 import 'package:eshop/models/master_model.dart';
 import 'package:eshop/models/notification_trigger.dart';
+import 'package:eshop/models/order_model.dart';
+import 'package:eshop/screens/notification/notification_page.dart';
 import 'package:eshop/screens/seller/order_details.dart';
-import 'package:eshop/utils/app_constants.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:eshop/widgets/buttons/primary_button.dart';
 import 'package:eshop/widgets/buttons/secondary_button.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import '../../main.dart';
+
 
 class SellerHome extends StatefulWidget {
   @override
@@ -20,53 +18,7 @@ class SellerHome extends StatefulWidget {
 }
 
 class _SellerHomeState extends State<SellerHome> {
- FirebaseMessaging messaging;
  final NotificationTrigger _notificationTrigger=NotificationTrigger();
- @override
- void initState() {
-   super.initState();
-   messaging = FirebaseMessaging.instance;
-   messaging.subscribeToTopic("seller");
-   messaging.getToken().then((value)async{
-     final data=await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).get();
-     if(data.data()['notificationKey']!=value){
-       await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).update({
-         'notificationKey':value
-       });
-     }
-   });
-   FirebaseMessaging.onMessage.listen((RemoteMessage event) async {
-     final data=await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).get();
-     final Map<String, dynamic> temp =
-     data.data()['notification'] as Map<String, dynamic>;
-     temp[DateTime.now().microsecondsSinceEpoch.toString()]=event.data['orderId'];
-     await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).update({
-       "notification":temp
-     });
-     final RemoteNotification notification = event.notification;
-     final AndroidNotification android = event.notification?.android;
-     if (notification != null && android != null) {
-       flutterLocalNotificationsPlugin.show(
-         0,
-         notification.title,
-         notification.body,
-         NotificationDetails(
-           android: AndroidNotificationDetails(
-             channel.id,
-             channel.name,
-             color: Colors.blue,
-             channelDescription: channel.description,
-             icon: '@mipmap/ic_launcher',
-           ),
-         ),
-       );
-     }
-   });
-   FirebaseMessaging.onMessageOpenedApp.listen((message) {
-     debugPrint("message read");
-   });
- }
-
  String statusHandler({bool cCustomer,bool cSeller,bool shipped,bool delivered}){
    if(cCustomer==true){
      return "Order cancelled by customer";
@@ -84,7 +36,178 @@ class _SellerHomeState extends State<SellerHome> {
      return "Order placed";
    }
  }
+ List<OrderModel> list=[];
+ List<OrderModel> searchList=[];
+ final _search = TextEditingController();
 
+ Future<void> onSearch(String text) async {
+   print(text);
+   searchList.clear();
+   if (text.isEmpty) {
+     setState(() {});
+     return;
+   }
+   for (final element in list) {
+     if (element.productName.toLowerCase().contains(text.toLowerCase())) {
+       searchList.add(element);
+     }
+   }
+   setState(() {});
+ }
+
+ Widget mainBody() {
+   if (searchList.isNotEmpty && _search.text.isNotEmpty) {
+     return ListView(
+       children: searchList.map((e) => GestureDetector(
+         onTap: (){
+           pushNewScreen(context, screen: OrderDetails(orderID: e.orderId,));
+         },
+         behavior: HitTestBehavior.opaque,
+         child: Card(
+           margin: EdgeInsets.only(left: 5.w,right: 5.w,bottom: 10.w),
+           elevation: 20,
+           child: Container(
+             width: 300.w,
+             padding: EdgeInsets.all(5.w),
+             child: Column(
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     Text("${e.productName}  X${e.quantity}",style: TextStyle(fontSize: 18.sp,color: kPrimary),),
+                     Text("${e.orderTime.day}/${e.orderTime.month}/${e.orderTime.year}  ${e.orderTime.hour}:${e.orderTime.minute}")
+                   ],
+                 ),
+                 SizedBox(height: 5.h,),
+                 Text("₹${e.productPrice}",style: TextStyle(fontSize: 18.sp,color: kPrimary),),
+                 SizedBox(height: 5.h,),
+                 Text(e.address),
+                 SizedBox(height: 5.h,),
+                 Text("Status: ${statusHandler(cCustomer: e.cancelledByCustomer,cSeller: e.cancelledBySeller,shipped: e.shipped,delivered: e.delivered)}",style:TextStyle(color: Colors.blue,fontSize: 15.sp),),
+                 Center(
+                   child: ElevatedButton(onPressed:()async{
+                     if(e.cancelledBySeller==false && e.cancelledByCustomer==false&& e.delivered==false&&e.shipped==false){
+                       try{
+                         _notificationTrigger.trigger(recipient:e.customer,orderID: e.orderId,title:"Order shipped",body:e.productName,);
+                         await FirebaseFirestore.instance.collection("orders").doc(e.orderId).update({
+                           "shipped":true
+                         }).then((value){
+                           BlocProvider.of<FetchOrderSellerBloc>(context)
+                               .add(FetchOrderTrigger());
+                         });
+                       }
+                       catch(e){
+                         ErrorHandle.showError("Something wrong");
+                       }
+                     }
+                     else{
+                       ErrorHandle.showError("Can not mark shipped");
+                     }
+                   },style: ElevatedButton.styleFrom(primary: Colors.green.shade400,fixedSize: Size(120.w,20.h)), child: const Text("Mark shipped"),),
+                 ),
+                 Center(
+                   child: ElevatedButton(onPressed:()async{
+                     if(e.cancelledBySeller==false && e.cancelledByCustomer==false&& e.delivered==false){
+                       try{
+                         await FirebaseFirestore.instance.collection("orders").doc(e.orderId).update({
+                           "cancelledBySeller":true
+                         });
+                       }
+                       catch(e){
+                         ErrorHandle.showError("Something wrong");
+                       }
+                     }
+                     else{
+                       ErrorHandle.showError("Can not cancel");
+                     }
+                   },style: ElevatedButton.styleFrom(primary: Colors.red.shade400,fixedSize: Size(120.w,20.h)), child: const Text("Cancel"),),
+                 ),
+               ],
+             ),
+           ),
+         ),
+       ),).toList(),
+     );
+   } else if (searchList.isEmpty && _search.text.isNotEmpty) {
+     return const Center(
+       child: Text("No result found"),
+     );
+   } else {
+     return ListView(
+       children: list.map((e) => GestureDetector(
+         onTap: (){
+           pushNewScreen(context, screen: OrderDetails(orderID: e.orderId,));
+         },
+         behavior: HitTestBehavior.opaque,
+         child: Card(
+           margin: EdgeInsets.only(left: 5.w,right: 5.w,bottom: 10.w),
+           elevation: 20,
+           child: Container(
+             width: 300.w,
+             padding: EdgeInsets.all(5.w),
+             child: Column(
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     Text("${e.productName}  X${e.quantity}",style: TextStyle(fontSize: 18.sp,color: kPrimary),),
+                     Text("${e.orderTime.day}/${e.orderTime.month}/${e.orderTime.year}  ${e.orderTime.hour}:${e.orderTime.minute}")
+                   ],
+                 ),
+                 SizedBox(height: 5.h,),
+                 Text("₹${e.productPrice}",style: TextStyle(fontSize: 18.sp,color: kPrimary),),
+                 SizedBox(height: 5.h,),
+                 Text(e.address),
+                 SizedBox(height: 5.h,),
+                 Text("Status: ${statusHandler(cCustomer: e.cancelledByCustomer,cSeller: e.cancelledBySeller,shipped: e.shipped,delivered: e.delivered)}",style:TextStyle(color: Colors.blue,fontSize: 15.sp),),
+                 Center(
+                   child: ElevatedButton(onPressed:()async{
+                     if(e.cancelledBySeller==false && e.cancelledByCustomer==false&& e.delivered==false&&e.shipped==false){
+                       try{
+                         _notificationTrigger.trigger(recipient:e.customer,orderID: e.orderId,title:"Order shipped",body:e.productName,);
+                         await FirebaseFirestore.instance.collection("orders").doc(e.orderId).update({
+                           "shipped":true
+                         }).then((value){
+                           BlocProvider.of<FetchOrderSellerBloc>(context)
+                               .add(FetchOrderTrigger());
+                         });
+                       }
+                       catch(e){
+                         ErrorHandle.showError("Something wrong");
+                       }
+                     }
+                     else{
+                       ErrorHandle.showError("Can not mark shipped");
+                     }
+                   },style: ElevatedButton.styleFrom(primary: Colors.green.shade400,fixedSize: Size(120.w,20.h)), child: const Text("Mark shipped"),),
+                 ),
+                 Center(
+                   child: ElevatedButton(onPressed:()async{
+                     if(e.cancelledBySeller==false && e.cancelledByCustomer==false&& e.delivered==false){
+                       try{
+                         await FirebaseFirestore.instance.collection("orders").doc(e.orderId).update({
+                           "cancelledBySeller":true
+                         });
+                       }
+                       catch(e){
+                         ErrorHandle.showError("Something wrong");
+                       }
+                     }
+                     else{
+                       ErrorHandle.showError("Can not cancel");
+                     }
+                   },style: ElevatedButton.styleFrom(primary: Colors.red.shade400,fixedSize: Size(120.w,20.h)), child: const Text("Cancel"),),
+                 ),
+               ],
+             ),
+           ),
+         ),
+       ),).toList(),
+     );
+   }
+ }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,6 +225,8 @@ class _SellerHomeState extends State<SellerHome> {
                 borderRadius: BorderRadius.circular(2.w),
               ),
               child: TextFormField(
+                controller: _search,
+                onChanged: onSearch,
                 textAlignVertical: TextAlignVertical.center,
                 decoration: const InputDecoration(
                   hintText: "Search orders",
@@ -117,39 +242,146 @@ class _SellerHomeState extends State<SellerHome> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.notifications,
-                        color: kWhite,
-                      ),
+                    StreamBuilder(
+                      stream: FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).snapshots(),
+                      builder: (context,AsyncSnapshot snap){
+                        Icon showIcon(){
+                          bool isNotificationViewed;
+                          if(snap.hasData){
+                            final bool isNotificationRead=snap.data['isNotificationSeen'] as bool;
+                            isNotificationViewed=isNotificationRead;
+                          }
+                          if(isNotificationViewed==false){
+                            return const Icon(Icons.notification_important,color: Colors.red,);
+                          }
+                          else{
+                            return const Icon(Icons.notifications);
+                          }
+                        }
+                        return IconButton(
+                          onPressed: () {
+                            pushNewScreen(context, screen: NotificationPage());
+                          },
+                          icon: showIcon(),
+                        );
+                      },
                     ),
                     IconButton(
                       onPressed: () {
                         showDialog(
                           context: context,
-                          barrierDismissible: false,
                           builder: (context) {
                             return Scaffold(
                               backgroundColor: Colors.transparent,
                               body: Center(
                                 child: Container(
                                   color: kWhite,
-                                  height: 350.h,
+                                  height: 250.h,
                                   width: 250.w,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  padding: EdgeInsets.all(15.w),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      SecondaryButton(
-                                        label: "Cancel",
-                                        callback: () {
-                                          Navigator.pop(context);
-                                        },
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "Sort by",
+                                            style: TextStyle(fontSize: 25.sp),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            icon: const Icon(Icons.cancel),
+                                          ),
+                                        ],
                                       ),
-                                      PrimaryButton(
-                                        label: "Apply",
-                                        callback: () {},
-                                      )
+                                      Divider(
+                                        thickness: 3.h,
+                                      ),
+                                      SizedBox(
+                                        height: 10.h,
+                                      ),
+                                      Text(
+                                        "Name",
+                                        style: TextStyle(fontSize: 20.sp),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                list.sort((a, b) {
+                                                  return a.productName.toLowerCase().compareTo(b.productName.toLowerCase());
+                                                });
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              primary: kPrimary,),
+                                            child: const Text("A"),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                list.sort((b, a) {
+                                                  return a.productName.toLowerCase().compareTo(b.productName.toLowerCase());
+                                                });
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              primary: kBlack,),
+                                            child: const Text("Z"),
+                                          ),
+                                        ],
+                                      ),
+                                      Divider(
+                                        thickness: 3.h,
+                                        color: kPrimary,
+                                      ),
+                                      SizedBox(
+                                        height: 10.h,
+                                      ),
+                                      Text(
+                                        "Price",
+                                        style: TextStyle(fontSize: 20.sp),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                list.sort((a, b) {
+                                                  return a.productPrice.compareTo(b.productPrice);
+                                                });
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              primary: kPrimary,),
+                                            child: const Text("Low"),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                list.sort((b, a) {
+                                                  return a.productPrice.compareTo(b.productPrice);
+                                                });
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              primary: kBlack,),
+                                            child: const Text("High"),
+                                          ),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -173,7 +405,13 @@ class _SellerHomeState extends State<SellerHome> {
       body:BlocProvider(
         create: (context) => FetchOrderSellerBloc()..add(FetchOrderTrigger()),
         child: BlocConsumer<FetchOrderSellerBloc,FetchOrderSellerState>(
-          listener: (context,state){},
+          listener: (context,state){
+            if(state is FetchOrderSellerLoaded){
+              setState(() {
+                list=state.list;
+              });
+            }
+          },
           builder: (context,state){
             if(state is FetchOrderSellerLoading){
               return const Center(
@@ -181,75 +419,7 @@ class _SellerHomeState extends State<SellerHome> {
               );
             }
             else if(state is FetchOrderSellerLoaded){
-              return ListView(
-                children: state.list.map((e) => GestureDetector(
-                  onTap: (){
-                    pushNewScreen(context, screen: OrderDetails(orderID: e.orderId,));
-                  },
-                  behavior: HitTestBehavior.opaque,
-                  child: Card(
-                    margin: EdgeInsets.only(left: 5.w,right: 5.w,bottom: 10.w),
-                    elevation: 20,
-                    child: Container(
-                      width: 300.w,
-                      padding: EdgeInsets.all(5.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("${e.productName}  X${e.quantity}",style: TextStyle(fontSize: 18.sp,color: kPrimary),),
-                              Text("${e.orderTime.day}/${e.orderTime.month}/${e.orderTime.year}  ${e.orderTime.hour}:${e.orderTime.minute}")
-                            ],
-                          ),
-                          SizedBox(height: 5.h,),
-                          Text("₹${e.productPrice}",style: TextStyle(fontSize: 18.sp,color: kPrimary),),
-                          SizedBox(height: 5.h,),
-                          Text(e.address),
-                          SizedBox(height: 5.h,),
-                          Text("Status: ${statusHandler(cCustomer: e.cancelledByCustomer,cSeller: e.cancelledBySeller,shipped: e.shipped,delivered: e.delivered)}",style:TextStyle(color: Colors.blue,fontSize: 15.sp),),
-                          Center(
-                            child: ElevatedButton(onPressed:()async{
-                              if(e.cancelledBySeller==false && e.cancelledByCustomer==false&& e.delivered==false){
-                                try{
-                                  _notificationTrigger.trigger(recipient:e.customer,productID: e.productId,title:"Order shipped",body:e.productName,);
-                                  await FirebaseFirestore.instance.collection("orders").doc(e.orderId).update({
-                                    "shipped":true
-                                  });
-                                }
-                                catch(e){
-                                  ErrorHandle.showError("Something wrong");
-                                }
-                              }
-                              else{
-                                ErrorHandle.showError("Can not mark shipped");
-                              }
-                            },style: ElevatedButton.styleFrom(primary: Colors.green.shade400,fixedSize: Size(120.w,20.h)), child: const Text("Mark shipped"),),
-                          ),
-                          Center(
-                            child: ElevatedButton(onPressed:()async{
-                              if(e.cancelledBySeller==false && e.cancelledByCustomer==false&& e.delivered==false){
-                                try{
-                                  await FirebaseFirestore.instance.collection("orders").doc(e.orderId).update({
-                                    "cancelledBySeller":true
-                                  });
-                                }
-                                catch(e){
-                                  ErrorHandle.showError("Something wrong");
-                                }
-                              }
-                              else{
-                                ErrorHandle.showError("Can not cancel");
-                              }
-                            },style: ElevatedButton.styleFrom(primary: Colors.red.shade400,fixedSize: Size(120.w,20.h)), child: const Text("Cancel"),),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),).toList(),
-              );
+              return mainBody();
             }
             else if(state is FetchOrderSellerEmpty){
               return const Center(

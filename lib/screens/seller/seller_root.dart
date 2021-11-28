@@ -4,15 +4,20 @@ import 'package:eshop/models/error_handler.dart';
 import 'package:eshop/models/master_model.dart';
 import 'package:eshop/screens/payment/payment_options.dart';
 import 'package:eshop/screens/screens.dart';
+import 'package:eshop/utils/app_constants.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:eshop/widgets/alert/progress_indicator.dart';
 import 'package:eshop/widgets/buttons/secondary_button.dart';
 import 'package:eshop/widgets/widgets.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lottie/lottie.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+
+import '../../main.dart';
 
 class SellerRoot extends StatefulWidget {
   @override
@@ -22,11 +27,45 @@ class SellerRoot extends StatefulWidget {
 class _SellerRootState extends State<SellerRoot> {
 
   PersistentTabController _controller;
+  FirebaseMessaging messaging;
   @override
   void initState() {
     _controller = PersistentTabController();
     WidgetsBinding.instance
         .addPostFrameCallback((_) => getOfferStatus(context));
+    messaging = FirebaseMessaging.instance;
+    messaging.subscribeToTopic("seller");
+    messaging.getToken().then((value)async{
+      final data=await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).get();
+      if(data.data()['notificationKey']!=value){
+        await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).update({
+          'notificationKey':value
+        });
+      }
+    });
+    FirebaseMessaging.onMessage.listen((RemoteMessage event) async {
+      final RemoteNotification notification = event.notification;
+      final AndroidNotification android = event.notification?.android;
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+          0,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              color: Colors.blue,
+              channelDescription: channel.description,
+              icon: '@mipmap/ic_launcher',
+            ),
+          ),
+        );
+      }
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      debugPrint("message read");
+    });
     super.initState();
   }
 

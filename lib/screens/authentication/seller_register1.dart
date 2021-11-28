@@ -157,6 +157,7 @@ class _SellerRegister1State extends State<SellerRegister1> {
                               "mobile": mobileNumber.text.trim(),
                               "category": shopType,
                               "notificationKey":value,
+                              "isNotificationSeen":true,
                               "notification":map
                             }).then((value) {
                               LoadingWidget.removeLoading(context);

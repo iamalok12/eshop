@@ -4,18 +4,14 @@ import 'package:eshop/features/fetch_shops/domain/fetch_shop_class.dart';
 import 'package:eshop/models/error_handler.dart';
 import 'package:eshop/models/master_model.dart';
 import 'package:eshop/screens/customer/shop_panel.dart';
-import 'package:eshop/screens/seller/order_details.dart';
-import 'package:eshop/utils/app_constants.dart';
+import 'package:eshop/screens/notification/notification_page.dart';
 import 'package:eshop/utils/colorpallets.dart';
 import 'package:eshop/utils/utils.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-import '../../main.dart';
 
 class CustomerHome extends StatefulWidget {
   @override
@@ -27,53 +23,69 @@ class _CustomerHomeState extends State<CustomerHome> {
   List<String> cityList = [];
   String chooseCity = "Choose city";
 
+  List<FetchShopsClass> searchListShops = [];
+  final _search = TextEditingController();
 
-
-
-  FirebaseMessaging messaging;
-  @override
-  void initState() {
-    super.initState();
-    messaging = FirebaseMessaging.instance;
-    messaging.subscribeToTopic("customer");
-    messaging.getToken().then((value)async{
-      final data=await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).get();
-      if(data.data()['notificationKey']!=value){
-        await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).update({
-          'notificationKey':value
-        });
+  Future<void> onSearch(String text) async {
+    searchListShops.clear();
+    if (text.isEmpty) {
+      setState(() {});
+      return;
+    }
+    for (final element in shopList) {
+      if (element.shopName.toLowerCase().contains(text.toLowerCase())) {
+        searchListShops.add(element);
       }
-    });
-    FirebaseMessaging.onMessage.listen((RemoteMessage event) async {
-      final data=await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).get();
-      final Map<String, dynamic> temp =
-      data.data()['notification'] as Map<String, dynamic>;
-      temp[DateTime.now().microsecondsSinceEpoch.toString()]=event.data['orderId'];
-      await FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).update({
-        "notification":temp
-      });
-      final RemoteNotification notification = event.notification;
-      final AndroidNotification android = event.notification?.android;
-      if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
-          0,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              color: Colors.blue,
-              channelDescription: channel.description,
-              icon: '@mipmap/ic_launcher',
-            ),
-          ),
-        );
-      }
-    });
-    FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      debugPrint("message read");
-    });
+    }
+    setState(() {});
+  }
+
+  Widget mainBody() {
+    if (searchListShops.isNotEmpty && _search.text.isNotEmpty) {
+      return ListView(
+        children: searchListShops.map((e) {
+          return ShopTiles(
+            shopName: e.shopName,
+            shopMail: e.shopMail,
+            shopOwner: e.name,
+            image1: e.image1,
+            image2: e.image2,
+            image3: e.image3,
+            image4: e.image4,
+            area: e.area,
+            locality: e.locality,
+            city: e.city,
+            pinCode: e.pinCode,
+            category: e.category,
+            mobileNumber: e.mobile,
+          );
+        }).toList(),
+      );
+    } else if (searchListShops.isEmpty && _search.text.isNotEmpty) {
+      return const Center(
+        child: Text("No result found"),
+      );
+    } else {
+      return ListView(
+        children: shopList.map((e) {
+          return ShopTiles(
+            shopName: e.shopName,
+            shopMail: e.shopMail,
+            shopOwner: e.name,
+            image1: e.image1,
+            image2: e.image2,
+            image3: e.image3,
+            image4: e.image4,
+            area: e.area,
+            locality: e.locality,
+            city: e.city,
+            pinCode: e.pinCode,
+            category: e.category,
+            mobileNumber: e.mobile,
+          );
+        }).toList(),
+      );
+    }
   }
 
   @override
@@ -95,6 +107,8 @@ class _CustomerHomeState extends State<CustomerHome> {
                   borderRadius: BorderRadius.circular(2.w),
                 ),
                 child: TextFormField(
+                  onChanged: onSearch,
+                  controller: _search,
                   textAlignVertical: TextAlignVertical.center,
                   decoration: const InputDecoration(
                     hintText: "Search shop",
@@ -110,12 +124,29 @@ class _CustomerHomeState extends State<CustomerHome> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.notifications,
-                          color: kWhite,
-                        ),
+                      StreamBuilder(
+                        stream: FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).snapshots(),
+                        builder: (context,AsyncSnapshot snap){
+                          Icon showIcon(){
+                            bool isNotificationViewed;
+                            if(snap.hasData){
+                              final bool isNotificationRead=snap.data['isNotificationSeen'] as bool;
+                              isNotificationViewed=isNotificationRead;
+                            }
+                            if(isNotificationViewed==false){
+                              return const Icon(Icons.notification_important,color: Colors.red,);
+                            }
+                            else{
+                              return const Icon(Icons.notifications);
+                            }
+                          }
+                          return IconButton(
+                            onPressed: () {
+                              pushNewScreen(context, screen: NotificationPage());
+                            },
+                            icon: showIcon(),
+                          );
+                        },
                       ),
                       BlocProvider(
                         create: (context) =>
@@ -297,23 +328,7 @@ class _CustomerHomeState extends State<CustomerHome> {
                 } else if (state is GetShopsNoShop) {
                   return const Text("No shop in the selected city");
                 } else if (state is GetShopsFound) {
-                  return ListView(
-                    children: shopList.map((e) => ShopTiles(
-                      shopName: e.shopName,
-                      shopMail: e.shopMail,
-                      shopOwner: e.name,
-                      image1: e.image1,
-                      image2: e.image2,
-                      image3: e.image3,
-                      image4: e.image4,
-                      area: e.area,
-                      locality: e.locality,
-                      city: e.city,
-                      pinCode: e.pinCode,
-                      category: e.category,
-                      mobileNumber: e.mobile,
-                    ),).toList(),
-                  );
+                  return mainBody();
                 } else {
                   return const SizedBox();
                 }

@@ -67,8 +67,6 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                       if (_formKey.currentState.validate()) {
                         try {
                           LoadingWidget.showLoading(context);
-                          final Map<String,dynamic> map1={};
-                          final Map<String,dynamic> map2={};
                           messaging.getToken().then((value) async {
                             await FirebaseFirestore.instance
                                 .collection("users")
@@ -77,9 +75,10 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                               "name": _customerName.text.trim(),
                               "mobile": _customerMobile.text.trim(),
                               "type": "customer",
-                              "cart":map1,
+                              "cart":{},
                               "notificationKey":value,
-                              "notification":map2,
+                              "notification":{},
+                              "isNotificationSeen":true,
                               "wishList":[],
                               "address":[]
                             }).then((value) {

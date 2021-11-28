@@ -70,13 +70,13 @@ class MyOrders extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   SizedBox(
                                     height: 80.w,
                                     width: 80.w,
                                     child: Image.network(e.image1,fit: BoxFit.fill,),
                                   ),
+                                  SizedBox(width: 20.w,),
                                   Column(
                                     children: [
                                       Text("${e.productName}: X${e.quantity}",style: TextStyle(color: kPrimary,fontSize: 18.sp),),
@@ -84,40 +84,6 @@ class MyOrders extends StatelessWidget {
                                       Text("₹${e.productPrice*e.quantity}",style: TextStyle(color: kPrimary,fontSize: 18.sp),),
                                     ],
                                   ),
-                                  Column(
-                                    children: [
-                                      ElevatedButton(onPressed:()async{
-                                        if(e.cancelledBySeller==false && e.delivered==false){
-                                          try{
-                                            await FirebaseFirestore.instance.collection("orders").doc(e.orderId).update({
-                                              "cancelledByCustomer":true
-                                            });
-                                          }
-                                          catch(e){
-                                            ErrorHandle.showError("Something wrong");
-                                          }
-                                        }
-                                        else{
-                                          ErrorHandle.showError("Can not cancel");
-                                        }
-                                      },style: ElevatedButton.styleFrom(primary: Colors.red.shade400,fixedSize: Size(120.w,20.h)), child: const Text("Cancel"),),
-                                      ElevatedButton(onPressed:()async{
-                                        if(e.cancelledBySeller==false && e.cancelledByCustomer==false&& e.shipped==true){
-                                          try{
-                                            await FirebaseFirestore.instance.collection("orders").doc(e.orderId).update({
-                                              "delivered":true
-                                            });
-                                          }
-                                          catch(e){
-                                            ErrorHandle.showError("Something wrong");
-                                          }
-                                        }
-                                        else{
-                                          ErrorHandle.showError("Can not mark delivered");
-                                        }
-                                      },style: ElevatedButton.styleFrom(primary: Colors.green.shade400,fixedSize: Size(120.w,20.h)), child: const Text("Mark delivered"),),
-                                    ],
-                                  )
                                 ],
                               ),
                               SizedBox(height: 5.h,),
@@ -158,6 +124,41 @@ class MyOrders extends StatelessWidget {
                                     },
                                   ),
                                 ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  ElevatedButton(onPressed:()async{
+                                    if(e.cancelledBySeller==false && e.delivered==false){
+                                      try{
+                                        await FirebaseFirestore.instance.collection("orders").doc(e.orderId).update({
+                                          "cancelledByCustomer":true
+                                        });
+                                      }
+                                      catch(e){
+                                        ErrorHandle.showError("Something wrong");
+                                      }
+                                    }
+                                    else{
+                                      ErrorHandle.showError("Can not cancel");
+                                    }
+                                  },style: ElevatedButton.styleFrom(primary: Colors.red.shade400,fixedSize: Size(120.w,20.h)), child: const Text("Cancel"),),
+                                  ElevatedButton(onPressed:()async{
+                                    if(e.cancelledBySeller==false && e.cancelledByCustomer==false&& e.shipped==true){
+                                      try{
+                                        await FirebaseFirestore.instance.collection("orders").doc(e.orderId).update({
+                                          "delivered":true
+                                        });
+                                      }
+                                      catch(e){
+                                        ErrorHandle.showError("Something wrong");
+                                      }
+                                    }
+                                    else{
+                                      ErrorHandle.showError("Can not mark delivered");
+                                    }
+                                  },style: ElevatedButton.styleFrom(primary: Colors.green.shade400,fixedSize: Size(120.w,20.h)), child: const Text("Mark delivered"),),
+                                ],
                               )
                             ],
                           ),

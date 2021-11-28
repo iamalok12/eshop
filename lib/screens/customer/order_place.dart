@@ -118,7 +118,7 @@ class _OrderPlaceState extends State<OrderPlace> {
                             orderTime: DateTime.now(),
                             orderId: orderID
                           ,);
-                          _notificationTrigger.trigger(recipient:widget.orderList[i].seller,productID: widget.orderList[i].productID,title:"Order received",body:widget.orderList[i].productName,);
+                          _notificationTrigger.trigger(recipient:widget.orderList[i].seller,orderID: orderID,title:"Order received",body:widget.orderList[i].productName,);
                           await FirebaseFirestore.instance
                               .collection("orders")
                               .doc(orderID)

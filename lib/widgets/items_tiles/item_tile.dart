@@ -3,6 +3,8 @@ import 'package:eshop/models/error_handler.dart';
 import 'package:eshop/screens/seller/item_detail.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:eshop/widgets/alert/warning_widget.dart';
+import 'package:eshop/widgets/buttons/primary_button.dart';
+import 'package:eshop/widgets/text_form_field/primary_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
@@ -142,15 +144,96 @@ class ItemTile extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: ()async{
-                        BlocProvider.of<EditItemsBloc>(context)
-                            .add(EditItemsTrigger());
+                        try{
+                          await FirebaseFirestore.instance.collection("Items").doc(itemID).update({
+                            "isAvailable":false
+                          }).then((value){
+                            BlocProvider.of<EditItemsBloc>(context)
+                                .add(EditItemsTrigger());
+                          });
+                        }
+                        catch(e){
+                          ErrorHandle.showError("Couldn't update availability");
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                           primary: isAvailable == true ? kPrimary : Colors.red,),
                       child: Text(getAvailability()),
                     ),
                     ElevatedButton(
-                      onPressed: (){},
+                      onPressed: (){
+                        showDialog(
+                          context: context,
+                          builder: (__) {
+                            final _updatedPrice=TextEditingController();
+                            return Scaffold(
+                              backgroundColor: Colors.transparent,
+                              body: Center(
+                                child: Container(
+                                  color: kWhite,
+                                  height: 230.h,
+                                  width: 250.w,
+                                  padding: EdgeInsets.all(15.w),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          SizedBox(
+                                            width:100.w,
+                                            child: Text(
+                                              "Update price for $productName",
+                                              style: TextStyle(fontSize: 15.sp,),
+                                              maxLines: 2,
+                                            ),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              Navigator.pop(__);
+                                            },
+                                            icon: const Icon(Icons.cancel),
+                                          ),
+                                        ],
+                                      ),
+                                      Divider(
+                                        thickness: 3.h,
+                                      ),
+                                      SizedBox(height: 5.h,),
+                                      PrimaryTextField(
+                                        controller: _updatedPrice,
+                                        label: "New price",
+                                        keyboardType: TextInputType.number,
+                                        textFieldOptions: PrimaryTextFieldOptions.price,
+                                      ),
+                                      SizedBox(height: 20.h,),
+                                      Center(
+                                        child: PrimaryButton(
+                                          label: "Submit",
+                                          callback: ()async{
+                                            try{
+                                              await FirebaseFirestore.instance.collection("Items").doc(itemID).update({
+                                                "productPrice":double.parse(_updatedPrice.text.trim())
+                                              }).then((value){
+                                                Navigator.pop(__);
+                                                BlocProvider.of<EditItemsBloc>(context)
+                                                    .add(EditItemsTrigger());
+                                              });
+                                            }
+                                            catch(e){
+                                              ErrorHandle.showError("Couldn't update price");
+                                            }
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
                       style: ElevatedButton.styleFrom(primary: kPrimary),
                       child: const Text("Update price"),
                     ),
