@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eshop/models/master_model.dart';
 import 'package:eshop/models/models.dart';
 import 'package:eshop/models/order_model.dart';
@@ -74,7 +75,12 @@ class MyOrders extends StatelessWidget {
                                   SizedBox(
                                     height: 80.w,
                                     width: 80.w,
-                                    child: Image.network(e.image1,fit: BoxFit.fill,),
+                                    child: CachedNetworkImage(
+                                      imageUrl: e.image1,
+                                      fit: BoxFit.fill,
+                                      placeholder: (context, url) => const Center(child: CircularProgressIndicator(),),
+                                      errorWidget: (context, url, error) => const Icon(Icons.error),
+                                    ),
                                   ),
                                   SizedBox(width: 20.w,),
                                   Column(

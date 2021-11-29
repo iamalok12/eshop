@@ -53,7 +53,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       else{
                         await Future.delayed(const Duration(milliseconds: 100));
                         if (!mounted) return;
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ChooseRole(),),);
+                        Navigator.of(context,rootNavigator: true).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>ChooseRole()), (Route<dynamic> route) => false);
+                        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ChooseRole(),),);
                       }
                     }
                     catch(e){

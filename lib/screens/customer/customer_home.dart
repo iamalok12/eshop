@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eshop/features/choose_city/bloc/choose_city_bloc.dart';
 import 'package:eshop/features/fetch_shops/bloc/get_shops_bloc.dart';
 import 'package:eshop/features/fetch_shops/domain/fetch_shop_class.dart';
@@ -86,6 +87,9 @@ class _CustomerHomeState extends State<CustomerHome> {
         }).toList(),
       );
     }
+  }
+  Future<void>refreshPage()async {
+    GetShopsBloc().add(GetShopsTriggerEvent());
   }
 
   @override
@@ -300,47 +304,50 @@ class _CustomerHomeState extends State<CustomerHome> {
         ),
         body: SafeArea(
           child: Center(
-            child: BlocConsumer<GetShopsBloc, GetShopsState>(
-              builder: (context, state) {
-                if (state is GetShopsLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state is GetShopsError) {
-                  return const Text("Unable to fetch data");
-                } else if (state is GetShopsNotSelected) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Lottie.asset("assets/images/choose_city.json",
-                            width: 150.w, height: 150.w,),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        Text(
-                          "Please choose your city",
-                          style: TextStyle(fontSize: 20.sp),
-                        )
-                      ],
-                    ),
-                  );
-                } else if (state is GetShopsNoShop) {
-                  return const Text("No shop in the selected city");
-                } else if (state is GetShopsFound) {
-                  return mainBody();
-                } else {
-                  return const SizedBox();
-                }
-              },
-              listener: (context, state) {
-                if (state is GetShopsFound) {
-                  setState(() {
-                    shopList.clear();
-                    shopList = state.list;
-                  });
-                }
-              },
+            child: RefreshIndicator(
+              onRefresh: refreshPage,
+              child: BlocConsumer<GetShopsBloc, GetShopsState>(
+                builder: (context, state) {
+                  if (state is GetShopsLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is GetShopsError) {
+                    return const Text("Unable to fetch data");
+                  } else if (state is GetShopsNotSelected) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Lottie.asset("assets/images/choose_city.json",
+                              width: 150.w, height: 150.w,),
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          Text(
+                            "Please choose your city",
+                            style: TextStyle(fontSize: 20.sp),
+                          )
+                        ],
+                      ),
+                    );
+                  } else if (state is GetShopsNoShop) {
+                    return const Text("No shop in the selected city");
+                  } else if (state is GetShopsFound) {
+                    return mainBody();
+                  } else {
+                    return const SizedBox();
+                  }
+                },
+                listener: (context, state) {
+                  if (state is GetShopsFound) {
+                    setState(() {
+                      shopList.clear();
+                      shopList = state.list;
+                    });
+                  }
+                },
+              ),
             ),
           ),
         ),
@@ -397,15 +404,15 @@ class ShopTiles extends StatelessWidget {
         elevation: 10.h,
         child: Column(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(image1),
-                  fit: BoxFit.fitWidth,
-                ),
-              ),
+            SizedBox(
               height: 160.h,
               width: double.infinity,
+              child: CachedNetworkImage(
+                imageUrl: image1,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => const Center(child: CircularProgressIndicator(),),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
             ),
             SizedBox(
               height: 5.h,

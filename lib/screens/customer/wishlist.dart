@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eshop/features/fetch_wishlist/bloc/fetch_wishlist_bloc.dart';
 import 'package:eshop/models/error_handler.dart';
 import 'package:eshop/models/master_model.dart';
@@ -101,7 +102,12 @@ class WishlistTile extends StatelessWidget {
                               SizedBox(
                                 height: 80.w,
                                 width: 80.w,
-                                child: Image.network(state.list.first.image1,fit: BoxFit.fill,),
+                                child: CachedNetworkImage(
+                                  imageUrl: state.list.first.image1,
+                                  fit: BoxFit.fill,
+                                  placeholder: (context, url) => const Center(child: CircularProgressIndicator(),),
+                                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                                ),
                               ),
                               SizedBox(width: 20.w,),
                               Column(

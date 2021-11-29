@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eshop/models/error_handler.dart';
-import 'package:eshop/models/loading.dart';
 import 'package:eshop/models/master_model.dart';
 import 'package:eshop/screens/authentication/login_screen.dart';
 import 'package:eshop/screens/customer/help_center.dart';
 import 'package:eshop/screens/customer/my_orders.dart';
 import 'package:eshop/utils/colorpallets.dart';
+import 'package:eshop/widgets/buttons/primary_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -246,23 +246,13 @@ class CustomerProfile extends StatelessWidget {
               SizedBox(
                 height: 40.h,
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  LoadingWidget.showLoading(context);
-                  MasterModel.signOut().then((value) {
-                    Navigator.of(context, rootNavigator: true).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => LoginScreen(),
-                      ),
-                    );
-                  }).onError((error, stackTrace) {
-                    LoadingWidget.removeLoading(context);
-                    ErrorHandle.showError("Something wrong");
-                  });
-                },
-                style: ElevatedButton.styleFrom(primary: kPrimary),
-                child: const Text("Logout"),
-              )
+              PrimaryButton(callback: ()async{
+                MasterModel.signOut().then((value){
+                  Navigator.of(context,rootNavigator: true).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>LoginScreen()), (Route<dynamic> route) => false);
+                }).onError((error, stackTrace){
+                  ErrorHandle.showError("Something wrong");
+                });
+              },label: "Logout",)
             ],
           ),
         ),

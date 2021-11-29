@@ -4,6 +4,8 @@ import 'package:eshop/screens/screens.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:flutter/material.dart';
 
+import '../../beta_testing.dart';
+
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -60,6 +62,23 @@ class _SplashScreenState extends State<SplashScreen> {
       );
     }
   }
+  Future<void> testing()async{
+    try{
+      final beta=await FirebaseFirestore.instance.collection("testing").doc("beta").get();
+      final bool status=beta.data()['disable'] as bool;
+      if(status==true){
+        await Future.delayed(const Duration(milliseconds: 100));
+        if (!mounted) return;
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BetaTesting()));
+      }
+      else{
+        goToScreen();
+      }
+    }
+    catch(e){
+      ErrorHandle.showError("Something wrong");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +93,7 @@ class _SplashScreenState extends State<SplashScreen> {
             child: AnimatedTextKit(
               pause: const Duration(milliseconds: 10),
               totalRepeatCount: 1,
-              onFinished: goToScreen,
+              onFinished: testing,
               animatedTexts: [
                 RotateAnimatedText(
                   'E-Shop',

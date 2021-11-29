@@ -8,7 +8,8 @@ class MasterModel{
   static FirebaseAuth auth=FirebaseAuth.instance;
   static SharedPreferences sharedPreferences;
   static Future<void> signOut()async{
-    await auth.signOut();
-    await googleSignIn.disconnect();
+    await auth.signOut().then((value)async{
+      await googleSignIn.disconnect();
+    });
   }
 }

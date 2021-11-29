@@ -18,7 +18,6 @@ class _EditItemsState extends State<EditItems> {
   final _search = TextEditingController();
 
   Future<void> onSearch(String text) async {
-    print(text);
     searchList.clear();
     if (text.isEmpty) {
       setState(() {});

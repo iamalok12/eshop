@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eshop/features/seller_profile/bloc/seller_profile_bloc.dart';
 import 'package:eshop/features/seller_profile/domain/seller_profile_class.dart';
 import 'package:eshop/models/error_handler.dart';
@@ -41,30 +42,11 @@ class _SellerProfileState extends State<SellerProfile> {
                                     scrollDirection: Axis.horizontal,
                                     children: imageList
                                         .map(
-                                          (e) => Image.network(
-                                            e,
+                                          (e) => CachedNetworkImage(
+                                            imageUrl: e,
                                             fit: BoxFit.cover,
-                                            loadingBuilder: (
-                                              context,
-                                              child,
-                                              loadingProgress,
-                                            ) {
-                                              if (loadingProgress == null) {
-                                                return child;
-                                              }
-                                              return const Center(
-                                                child:
-                                                    CircularProgressIndicator(),
-                                              );
-                                            },
-                                            errorBuilder: (
-                                              context,
-                                              error,
-                                              stackTrace,
-                                            ) =>
-                                                const Text(
-                                              'Some errors occurred!',
-                                            ),
+                                            placeholder: (context, url) => const Center(child: CircularProgressIndicator(),),
+                                            errorWidget: (context, url, error) => const Icon(Icons.error),
                                           ),
                                         )
                                         .toList(),

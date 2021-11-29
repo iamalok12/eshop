@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -45,9 +46,11 @@ class ItemDetail extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 children: [image1, image2, image3, image4]
                     .map(
-                      (e) => Image.network(
-                        e,
+                      (e) => CachedNetworkImage(
+                        imageUrl: e,
                         fit: BoxFit.fill,
+                        placeholder: (context, url) => const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
                       ),
                     )
                     .toList(),

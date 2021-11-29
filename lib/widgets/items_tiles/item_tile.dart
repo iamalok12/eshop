@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eshop/features/edit_items_seller/bloc/edit_items_bloc.dart';
 import 'package:eshop/models/error_handler.dart';
 import 'package:eshop/screens/seller/item_detail.dart';
@@ -78,9 +79,11 @@ class ItemTile extends StatelessWidget {
                     SizedBox(
                       height: 80.w,
                       width: 80.w,
-                      child: Image.network(
-                        image1,
-                        fit: BoxFit.cover,
+                      child: CachedNetworkImage(
+                        imageUrl: image1,
+                        fit: BoxFit.fill,
+                        placeholder: (context, url) => const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
                       ),
                     ),
                     SizedBox(
@@ -146,7 +149,7 @@ class ItemTile extends StatelessWidget {
                       onPressed: ()async{
                         try{
                           await FirebaseFirestore.instance.collection("Items").doc(itemID).update({
-                            "isAvailable":false
+                            "isAvailable":!isAvailable
                           }).then((value){
                             BlocProvider.of<EditItemsBloc>(context)
                                 .add(EditItemsTrigger());

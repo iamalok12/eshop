@@ -1,5 +1,4 @@
 import 'package:eshop/features/fetch_orders/data/fetch_order_seller_repo.dart';
-import 'package:eshop/features/fetch_wishlist/bloc/fetch_wishlist_bloc.dart';
 import 'package:eshop/models/order_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,8 +24,6 @@ class FetchOrderSellerBloc extends Bloc<FetchOrderSellerEvent, FetchOrderSellerS
         }
       }
       catch(e){
-        print(e);
-        print("Invoking");
         yield FetchOrderSellerError();
       }
     }

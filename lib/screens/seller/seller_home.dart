@@ -6,8 +6,6 @@ import 'package:eshop/models/order_model.dart';
 import 'package:eshop/screens/notification/notification_page.dart';
 import 'package:eshop/screens/seller/order_details.dart';
 import 'package:eshop/utils/utils.dart';
-import 'package:eshop/widgets/buttons/primary_button.dart';
-import 'package:eshop/widgets/buttons/secondary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
@@ -41,7 +39,6 @@ class _SellerHomeState extends State<SellerHome> {
  final _search = TextEditingController();
 
  Future<void> onSearch(String text) async {
-   print(text);
    searchList.clear();
    if (text.isEmpty) {
      setState(() {});
@@ -208,6 +205,10 @@ class _SellerHomeState extends State<SellerHome> {
      );
    }
  }
+ Future<void>refreshPage()async {
+   FetchOrderSellerBloc().add(FetchOrderTrigger());
+ }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -404,37 +405,40 @@ class _SellerHomeState extends State<SellerHome> {
       ),
       body:BlocProvider(
         create: (context) => FetchOrderSellerBloc()..add(FetchOrderTrigger()),
-        child: BlocConsumer<FetchOrderSellerBloc,FetchOrderSellerState>(
-          listener: (context,state){
-            if(state is FetchOrderSellerLoaded){
-              setState(() {
-                list=state.list;
-              });
-            }
-          },
-          builder: (context,state){
-            if(state is FetchOrderSellerLoading){
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            else if(state is FetchOrderSellerLoaded){
-              return mainBody();
-            }
-            else if(state is FetchOrderSellerEmpty){
-              return const Center(
-                child: Text("No orders yet"),
-              );
-            }
-            else if(state is FetchOrderSellerError){
-              return const Center(
-                child: Text("Unable to fetch data"),
-              );
-            }
-            else{
-              return const SizedBox();
-            }
-          },
+        child: RefreshIndicator(
+          onRefresh: refreshPage,
+          child: BlocConsumer<FetchOrderSellerBloc,FetchOrderSellerState>(
+            listener: (context,state){
+              if(state is FetchOrderSellerLoaded){
+                setState(() {
+                  list=state.list;
+                });
+              }
+            },
+            builder: (context,state){
+              if(state is FetchOrderSellerLoading){
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              else if(state is FetchOrderSellerLoaded){
+                return mainBody();
+              }
+              else if(state is FetchOrderSellerEmpty){
+                return const Center(
+                  child: Text("No orders yet"),
+                );
+              }
+              else if(state is FetchOrderSellerError){
+                return const Center(
+                  child: Text("Unable to fetch data"),
+                );
+              }
+              else{
+                return const SizedBox();
+              }
+            },
+          ),
         ),
       ),
     );

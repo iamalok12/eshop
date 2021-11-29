@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eshop/features/fetch_cart/bloc/fetch_cart_bloc.dart';
 import 'package:eshop/models/customer_order.dart';
 import 'package:eshop/models/error_handler.dart';
@@ -53,21 +54,28 @@ class _ShoppingCartState extends State<ShoppingCart> {
                             ),
                         );
                         maps=map;
-                        return ListView.builder(
-                          itemCount: map.length,
-                          itemBuilder: (_, index) {
-                            return Center(
-                              child: ShoppingCartTile(
-                                key: ObjectKey(map.entries.toList()[index].key),
-                                productID: map.entries.toList()[index].key,
-                                amount: map.entries
-                                    .toList()[index]
-                                    .value
-                                    .toString(),
-                              ),
-                            );
-                          },
-                        );
+                        if(maps.isEmpty){
+                          return const Center(
+                            child: Text("Cart empty"),
+                          );
+                        }
+                        else{
+                          return ListView.builder(
+                            itemCount: map.length,
+                            itemBuilder: (_, index) {
+                              return Center(
+                                child: ShoppingCartTile(
+                                  key: ObjectKey(map.entries.toList()[index].key),
+                                  productID: map.entries.toList()[index].key,
+                                  amount: map.entries
+                                      .toList()[index]
+                                      .value
+                                      .toString(),
+                                ),
+                              );
+                            },
+                          );
+                        }
                       }
                     },
                   ),
@@ -226,9 +234,11 @@ class ShoppingCartTile extends StatelessWidget {
                         SizedBox(
                           height: 80.w,
                           width: 80.w,
-                          child: Image.network(
-                            state.list.first.image1,
+                          child: CachedNetworkImage(
+                            imageUrl: state.list.first.image1,
                             fit: BoxFit.fill,
+                            placeholder: (context, url) => const Center(child: CircularProgressIndicator(),),
+                            errorWidget: (context, url, error) => const Icon(Icons.error),
                           ),
                         ),
                         Column(

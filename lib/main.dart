@@ -3,6 +3,7 @@ import 'package:eshop/utils/app_constants.dart';
 import 'package:eshop/utils/utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/screens.dart';
@@ -29,6 +30,10 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return ScreenUtilInit(
       designSize: const Size(360, 640),
       builder: () => MaterialApp(

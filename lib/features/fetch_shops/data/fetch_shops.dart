@@ -25,7 +25,9 @@ class FetchShops {
           mobile: data.docs[i].data()['mobile'] as String,
           shopMail: data.docs[i].id,
         );
-        list.add(shop);
+        if(shop.image1.isNotEmpty){
+          list.add(shop);
+        }
       }
     }
     return list;

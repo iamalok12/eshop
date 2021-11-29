@@ -1,5 +1,4 @@
 import 'package:eshop/models/error_handler.dart';
-import 'package:eshop/models/loading.dart';
 import 'package:eshop/models/master_model.dart';
 import 'package:eshop/screens/authentication/login_screen.dart';
 import 'package:eshop/utils/utils.dart';
@@ -28,11 +27,9 @@ class _LogoutSellerState extends State<LogoutSeller> {
               Text("Logout... \n Are you sure?",style: TextStyle(fontSize: 25.sp),textAlign: TextAlign.center,),
               SizedBox(height: 60.h,),
               PrimaryButton(callback: ()async{
-                LoadingWidget.showLoading(context);
                 MasterModel.signOut().then((value){
-                  Navigator.of(context, rootNavigator: true).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen(),),);
+                  Navigator.of(context,rootNavigator: true).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>LoginScreen()), (Route<dynamic> route) => false);
                 }).onError((error, stackTrace){
-                  LoadingWidget.removeLoading(context);
                   ErrorHandle.showError("Something wrong");
                 });
               },label: "Logout",)

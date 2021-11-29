@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eshop/models/customer_order.dart';
 import 'package:eshop/models/error_handler.dart';
 import 'package:eshop/models/master_model.dart';
@@ -51,9 +52,11 @@ class ProductDetail extends StatelessWidget {
                     image3,
                     image4,
                   ].map(
-                        (e) => Image.network(
-                          e,
+                        (e) => CachedNetworkImage(
+                          imageUrl: e,
                           fit: BoxFit.fill,
+                          placeholder: (context, url) => const Center(child: CircularProgressIndicator(),),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
                       ).toList(),
                 ),
