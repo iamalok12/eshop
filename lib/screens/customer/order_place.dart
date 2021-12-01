@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eshop/models/customer_order.dart';
-import 'package:eshop/models/error_handler.dart';
-import 'package:eshop/models/master_model.dart';
-import 'package:eshop/models/notification_trigger.dart';
-import 'package:eshop/models/order_model.dart';
-import 'package:eshop/screens/customer/customer_root.dart';
-import 'package:eshop/utils/colorpallets.dart';
+import 'package:eshop/data/data.dart';
+import 'package:eshop/models/models.dart';
+import 'package:eshop/screens/screens.dart';
+import 'package:eshop/utils/utils.dart';
+import 'package:eshop/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';

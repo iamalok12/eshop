@@ -1,8 +1,7 @@
-import 'package:eshop/models/error_handler.dart';
-import 'package:eshop/models/master_model.dart';
-import 'package:eshop/screens/authentication/login_screen.dart';
+import 'package:eshop/models/models.dart';
+import 'package:eshop/screens/screens.dart';
 import 'package:eshop/utils/utils.dart';
-import 'package:eshop/widgets/buttons/primary_button.dart';
+import 'package:eshop/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 

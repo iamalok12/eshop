@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eshop/features/seller_profile/domain/seller_profile_class.dart';
-import 'package:eshop/models/error_handler.dart';
-import 'package:eshop/models/master_model.dart';
+import 'package:eshop/models/models.dart';
+import 'package:eshop/widgets/widgets.dart';
 
 
 class SellerProfileRepo{

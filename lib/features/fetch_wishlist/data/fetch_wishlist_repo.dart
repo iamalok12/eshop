@@ -1,5 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eshop/features/fetch_wishlist/domain/fetch_wishlist_class.dart';
-import 'package:eshop/utils/utils.dart';
+
 
 class FetchWishlistRepo{
   Future<List<FetchWishListClass>> getWishlist(String productID)async{

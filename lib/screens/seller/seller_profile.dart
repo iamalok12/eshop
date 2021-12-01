@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eshop/features/seller_profile/bloc/seller_profile_bloc.dart';
 import 'package:eshop/features/seller_profile/domain/seller_profile_class.dart';
-import 'package:eshop/models/error_handler.dart';
-import 'package:eshop/screens/authentication/seller_register3.dart';
+import 'package:eshop/screens/screens.dart';
 import 'package:eshop/utils/utils.dart';
+import 'package:eshop/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class SellerProfile extends StatefulWidget {

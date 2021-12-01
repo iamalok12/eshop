@@ -1,6 +1,5 @@
 import 'package:eshop/utils/utils.dart';
-import 'package:eshop/widgets/buttons/primary_button.dart';
-import 'package:eshop/widgets/buttons/secondary_button.dart';
+import 'package:eshop/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 

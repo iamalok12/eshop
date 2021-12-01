@@ -1,5 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eshop/features/fetch_shops/domain/fetch_shop_class.dart';
-import 'package:eshop/utils/utils.dart';
 
 class FetchShops {
   Future<List<FetchShopsClass>> getShops(String city) async {

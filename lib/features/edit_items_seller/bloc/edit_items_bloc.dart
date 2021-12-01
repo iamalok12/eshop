@@ -1,5 +1,5 @@
 import 'package:eshop/features/edit_items_seller/data/edit_items_repo.dart';
-import 'package:eshop/models/seller_items.dart';
+import 'package:eshop/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

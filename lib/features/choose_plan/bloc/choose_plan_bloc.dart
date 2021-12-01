@@ -1,9 +1,8 @@
 import 'dart:async';
+import 'package:eshop/data/data.dart';
 import 'package:eshop/features/choose_plan/data/choose_plan.dart';
-import 'package:eshop/models/retrieve_mobile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 part 'choose_plan_event.dart';
 part 'choose_plan_state.dart';

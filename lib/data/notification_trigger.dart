@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:eshop/models/models.dart';
-import 'package:eshop/utils/utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eshop/widgets/widgets.dart';
 import 'package:http/http.dart' as http;
 
 class NotificationTrigger{

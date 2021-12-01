@@ -1,18 +1,15 @@
 // do not touch
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eshop/features/payment_status/bloc/payment_status_bloc.dart';
-import 'package:eshop/models/error_handler.dart';
-import 'package:eshop/models/master_model.dart';
-import 'package:eshop/screens/payment/payment_options.dart';
+import 'package:eshop/models/models.dart';
 import 'package:eshop/screens/screens.dart';
-import 'package:eshop/utils/app_constants.dart';
 import 'package:eshop/utils/utils.dart';
-import 'package:eshop/widgets/alert/progress_indicator.dart';
-import 'package:eshop/widgets/buttons/secondary_button.dart';
 import 'package:eshop/widgets/widgets.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lottie/lottie.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';

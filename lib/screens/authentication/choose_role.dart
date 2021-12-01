@@ -1,7 +1,5 @@
-import 'package:eshop/screens/authentication/customer_register.dart';
-import 'package:eshop/screens/authentication/seller_register1.dart';
-import 'package:eshop/widgets/buttons/primary_button.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:eshop/screens/screens.dart';
+import 'package:eshop/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';

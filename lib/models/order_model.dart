@@ -1,4 +1,4 @@
-import 'package:eshop/utils/utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class OrderModel {
   String address;

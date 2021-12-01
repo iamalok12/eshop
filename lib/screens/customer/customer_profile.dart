@@ -1,12 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eshop/models/error_handler.dart';
-import 'package:eshop/models/master_model.dart';
-import 'package:eshop/screens/authentication/login_screen.dart';
-import 'package:eshop/screens/customer/help_center.dart';
-import 'package:eshop/screens/customer/my_orders.dart';
-import 'package:eshop/utils/colorpallets.dart';
-import 'package:eshop/widgets/buttons/primary_button.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:eshop/models/models.dart';
+import 'package:eshop/screens/screens.dart';
+import 'package:eshop/utils/utils.dart';
+import 'package:eshop/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';

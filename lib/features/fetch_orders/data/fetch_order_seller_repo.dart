@@ -1,6 +1,5 @@
-import 'package:eshop/models/master_model.dart';
-import 'package:eshop/models/order_model.dart';
-import 'package:eshop/utils/utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eshop/models/models.dart';
 
 class FetchOrderSellerRepo{
   Future<List<OrderModel>> getOrders()async{

@@ -1,6 +1,6 @@
 import 'package:eshop/features/choose_plan/bloc/choose_plan_bloc.dart';
-import 'package:eshop/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChoosePlanPage extends StatefulWidget {
   @override

@@ -1,5 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eshop/features/fetch_cart/domain/fetch_cart_class.dart';
-import 'package:eshop/utils/utils.dart';
+
 
 class FetchCartRepo {
   Future<List<FetchCartClass>> getCart(String productID) async {

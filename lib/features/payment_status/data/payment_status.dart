@@ -1,5 +1,5 @@
-import 'package:eshop/models/master_model.dart';
-import 'package:eshop/utils/utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eshop/models/models.dart';
 
 class PaymentStatusRepo{
   final String doNotUse="";

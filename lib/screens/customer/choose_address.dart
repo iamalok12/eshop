@@ -1,12 +1,8 @@
-import 'package:eshop/models/customer_order.dart';
-import 'package:eshop/models/error_handler.dart';
-import 'package:eshop/models/master_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eshop/models/models.dart';
-import 'package:eshop/screens/customer/order_place.dart';
-import 'package:eshop/utils/colorpallets.dart';
+import 'package:eshop/screens/screens.dart';
 import 'package:eshop/utils/utils.dart';
-import 'package:eshop/widgets/text_form_field/primary_text_form_field.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:eshop/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

@@ -1,8 +1,7 @@
-import 'package:eshop/models/error_handler.dart';
-import 'package:eshop/screens/authentication/choose_role.dart';
-import 'package:eshop/screens/customer/customer_root.dart';
-import 'package:eshop/screens/seller/seller_root.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eshop/screens/screens.dart';
 import 'package:eshop/utils/utils.dart';
+import 'package:eshop/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

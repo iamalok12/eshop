@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:eshop/features/fetch_shops/data/fetch_shops.dart';
 import 'package:eshop/features/fetch_shops/domain/fetch_shop_class.dart';
-import 'package:eshop/models/master_model.dart';
+import 'package:eshop/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

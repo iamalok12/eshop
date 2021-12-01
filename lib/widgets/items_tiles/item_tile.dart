@@ -1,12 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eshop/features/edit_items_seller/bloc/edit_items_bloc.dart';
-import 'package:eshop/models/error_handler.dart';
-import 'package:eshop/screens/seller/item_detail.dart';
+import 'package:eshop/screens/screens.dart';
 import 'package:eshop/utils/utils.dart';
-import 'package:eshop/widgets/alert/warning_widget.dart';
-import 'package:eshop/widgets/buttons/primary_button.dart';
-import 'package:eshop/widgets/text_form_field/primary_text_form_field.dart';
+import 'package:eshop/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class ItemTile extends StatelessWidget {

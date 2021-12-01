@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:eshop/features/payment_status/data/payment_status.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'payment_status_event.dart';

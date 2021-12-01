@@ -1,10 +1,9 @@
 import 'package:eshop/features/edit_items_seller/bloc/edit_items_bloc.dart';
-import 'package:eshop/models/error_handler.dart';
-import 'package:eshop/models/seller_items.dart';
-import 'package:eshop/utils/colorpallets.dart';
+import 'package:eshop/models/models.dart';
 import 'package:eshop/utils/utils.dart';
-import 'package:eshop/widgets/items_tiles/item_tile.dart';
+import 'package:eshop/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EditItems extends StatefulWidget {

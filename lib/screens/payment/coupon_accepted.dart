@@ -1,6 +1,6 @@
-import 'package:eshop/screens/seller/seller_root.dart';
+import 'package:eshop/screens/screens.dart';
 import 'package:eshop/utils/utils.dart';
-import 'package:eshop/widgets/buttons/primary_button.dart';
+import 'package:eshop/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';

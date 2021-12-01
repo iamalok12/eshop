@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eshop/features/fetch_cart/bloc/fetch_cart_bloc.dart';
-import 'package:eshop/models/customer_order.dart';
-import 'package:eshop/models/error_handler.dart';
-import 'package:eshop/models/master_model.dart';
-import 'package:eshop/screens/customer/product_details.dart';
+import 'package:eshop/models/models.dart';
+import 'package:eshop/screens/screens.dart';
 import 'package:eshop/utils/utils.dart';
+import 'package:eshop/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import 'choose_address.dart';
@@ -121,13 +122,18 @@ class _ShoppingCartState extends State<ShoppingCart> {
                     if(allProductAvailable==true){
                       await Future.delayed(const Duration(milliseconds: 100));
                       if (!mounted) return;
-                      pushNewScreen(
-                        context,
-                        screen: ChooseAddress(
-                          orderList: order,
-                          isCartToBeEmpty: true,
-                        ),
-                      );
+                      if(order.isEmpty){
+                        ErrorHandle.showError("Something wrong");
+                      }
+                      else{
+                        pushNewScreen(
+                          context,
+                          screen: ChooseAddress(
+                            orderList: order,
+                            isCartToBeEmpty: true,
+                          ),
+                        );
+                      }
                     }
                   }
                   catch(e){

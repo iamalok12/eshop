@@ -63,7 +63,7 @@ class PrimaryTextField extends StatelessWidget {
           }
           else{
             if(value.length<4){
-              return "Address is too short";
+              return "Input is too short";
             }
             else{
               return null;

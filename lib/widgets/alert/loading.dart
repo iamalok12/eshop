@@ -1,4 +1,4 @@
-import 'package:eshop/widgets/alert/progress_indicator.dart';
+import 'package:eshop/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class LoadingWidget{

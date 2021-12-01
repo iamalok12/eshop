@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eshop/models/master_model.dart';
-import 'package:eshop/models/seller_items.dart';
+import 'package:eshop/models/models.dart';
 
 class EditItemsRepo{
   Future<List<SellerItems>> fetchItems()async{

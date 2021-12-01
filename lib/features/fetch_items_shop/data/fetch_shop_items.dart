@@ -1,5 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eshop/features/fetch_items_shop/domain/seller_item_class.dart';
-import 'package:eshop/utils/utils.dart';
+
 
 class FetchShopItems {
   Future<List<SellerItemsClass>> getItemsShop(String sellerEmail) async {

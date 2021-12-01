@@ -1,12 +1,9 @@
-import 'package:eshop/models/models.dart';
+import 'package:eshop/screens/screens.dart';
 import 'package:eshop/utils/textstyles.dart';
 import 'package:eshop/utils/utils.dart';
-import 'package:eshop/widgets/buttons/primary_button.dart';
-import 'package:eshop/widgets/text_form_field/primary_text_form_field.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:eshop/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'add_items2.dart';
 
 
 class AddItem extends StatefulWidget {
