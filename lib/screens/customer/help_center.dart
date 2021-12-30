@@ -6,7 +6,7 @@ class HelpCenter extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text("Contact ialok@outlook.com for support"),
+        child: Text("Contact ialok@outlook.com & aaronchellaya25@gmail.com for support"),
       ),
     );
   }
