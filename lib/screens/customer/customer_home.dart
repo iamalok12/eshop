@@ -101,11 +101,8 @@ class _CustomerHomeState extends State<CustomerHome> {
           backgroundColor: kBlack,
           title: Row(
             children: [
-              SizedBox(
-                width: 2.w,
-              ),
               Container(
-                width: 240.w,
+                width: 230.w,
                 decoration: BoxDecoration(
                   color: kWhite,
                   borderRadius: BorderRadius.circular(2.w),
@@ -126,7 +123,7 @@ class _CustomerHomeState extends State<CustomerHome> {
               Expanded(
                 child: Center(
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       StreamBuilder(
                         stream: FirebaseFirestore.instance.collection("users").doc(MasterModel.auth.currentUser.email).snapshots(),
@@ -315,24 +312,280 @@ class _CustomerHomeState extends State<CustomerHome> {
                   } else if (state is GetShopsError) {
                     return const Text("Unable to fetch data");
                   } else if (state is GetShopsNotSelected) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Lottie.asset("assets/images/choose_city.json",
-                              width: 150.w, height: 150.w,),
-                          SizedBox(
-                            height: 20.h,
-                          ),
-                          Text(
-                            "Please choose your city",
-                            style: TextStyle(fontSize: 20.sp),
-                          )
-                        ],
+                    return GestureDetector(
+                      onTap: (){
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (_) {
+                            return Scaffold(
+                              backgroundColor: Colors.transparent,
+                              body: SafeArea(
+                                child: Center(
+                                  child: Container(
+                                    padding: EdgeInsets.only(
+                                      top: 10.w,
+                                      bottom: 10.w,
+                                      left: 20.w,
+                                      right: 20.w,),
+                                    height: 200.w,
+                                    width: 250.w,
+                                    color: Colors.white,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment
+                                          .spaceEvenly,
+                                      children: [
+                                        StatefulBuilder(
+                                          builder:
+                                              (context, setState) {
+                                            return Container(
+                                              decoration:
+                                              BoxDecoration(
+                                                border: Border.all(),
+                                                borderRadius:
+                                                BorderRadius
+                                                    .circular(
+                                                  7.w,
+                                                ),
+                                              ),
+                                              child: DropdownButton<
+                                                  String>(
+                                                isExpanded: true,
+                                                iconSize: 30.w,
+                                                hint: Text(
+                                                  "  $chooseCity",),
+                                                underline:
+                                                const Text(""),
+                                                items: cityList.map(
+                                                      (String value) {
+                                                    return DropdownMenuItem<
+                                                        String>(
+                                                      value: value,
+                                                      child:
+                                                      Text(value),
+                                                    );
+                                                  },
+                                                ).toList(),
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    chooseCity =
+                                                        value;
+                                                  });
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment
+                                              .spaceBetween,
+                                          children: [
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pop(_);
+                                              },
+                                              style: ElevatedButton
+                                                  .styleFrom(
+                                                primary: kBlack,
+                                              ),
+                                              child: const Text(
+                                                "Cancel",
+                                              ),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () async {
+                                                if (chooseCity !=
+                                                    "Choose city") {
+                                                  await MasterModel
+                                                      .sharedPreferences
+                                                      .setString(
+                                                    "city",
+                                                    chooseCity,)
+                                                      .then((value) {
+                                                    BlocProvider.of<
+                                                        GetShopsBloc>(
+                                                      context,)
+                                                        .add(
+                                                      GetShopsTriggerEvent(),);
+                                                    Navigator.pop(_);
+                                                  });
+                                                }
+                                              },
+                                              style: ElevatedButton
+                                                  .styleFrom(
+                                                primary: kPrimary,
+                                              ),
+                                              child: const Text(
+                                                "Submit",
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Lottie.asset("assets/images/choose_city.json",
+                                width: 150.w, height: 150.w,),
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                            Text(
+                              "Please choose your city",
+                              style: TextStyle(fontSize: 20.sp),
+                            )
+                          ],
+                        ),
                       ),
                     );
                   } else if (state is GetShopsNoShop) {
-                    return const Text("No shop in the selected city");
+                    return GestureDetector(
+                      onTap: (){
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (_) {
+                            return Scaffold(
+                              backgroundColor: Colors.transparent,
+                              body: SafeArea(
+                                child: Center(
+                                  child: Container(
+                                    padding: EdgeInsets.only(
+                                      top: 10.w,
+                                      bottom: 10.w,
+                                      left: 20.w,
+                                      right: 20.w,),
+                                    height: 200.w,
+                                    width: 250.w,
+                                    color: Colors.white,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment
+                                          .spaceEvenly,
+                                      children: [
+                                        StatefulBuilder(
+                                          builder:
+                                              (context, setState) {
+                                            return Container(
+                                              decoration:
+                                              BoxDecoration(
+                                                border: Border.all(),
+                                                borderRadius:
+                                                BorderRadius
+                                                    .circular(
+                                                  7.w,
+                                                ),
+                                              ),
+                                              child: DropdownButton<
+                                                  String>(
+                                                isExpanded: true,
+                                                iconSize: 30.w,
+                                                hint: Text(
+                                                  "  $chooseCity",),
+                                                underline:
+                                                const Text(""),
+                                                items: cityList.map(
+                                                      (String value) {
+                                                    return DropdownMenuItem<
+                                                        String>(
+                                                      value: value,
+                                                      child:
+                                                      Text(value),
+                                                    );
+                                                  },
+                                                ).toList(),
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    chooseCity =
+                                                        value;
+                                                  });
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment
+                                              .spaceBetween,
+                                          children: [
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pop(_);
+                                              },
+                                              style: ElevatedButton
+                                                  .styleFrom(
+                                                primary: kBlack,
+                                              ),
+                                              child: const Text(
+                                                "Cancel",
+                                              ),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () async {
+                                                if (chooseCity !=
+                                                    "Choose city") {
+                                                  await MasterModel
+                                                      .sharedPreferences
+                                                      .setString(
+                                                    "city",
+                                                    chooseCity,)
+                                                      .then((value) {
+                                                    BlocProvider.of<
+                                                        GetShopsBloc>(
+                                                      context,)
+                                                        .add(
+                                                      GetShopsTriggerEvent(),);
+                                                    Navigator.pop(_);
+                                                  });
+                                                }
+                                              },
+                                              style: ElevatedButton
+                                                  .styleFrom(
+                                                primary: kPrimary,
+                                              ),
+                                              child: const Text(
+                                                "Submit",
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.error_outline,size: 60.h,),
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                            Text(
+                              "Service Unavailable at your location",
+                              style: TextStyle(fontSize: 20.sp),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
                   } else if (state is GetShopsFound) {
                     return mainBody();
                   } else {

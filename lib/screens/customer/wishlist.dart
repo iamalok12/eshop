@@ -7,6 +7,7 @@ import 'package:eshop/utils/utils.dart';
 import 'package:eshop/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class WishList extends StatefulWidget {
@@ -31,8 +32,41 @@ class _WishListState extends State<WishList> {
             } else {
               final List list = snap.data['wishList'] as List<dynamic>;
               if (list.isEmpty) {
-                return const Center(
-                  child: Text("Wishlist empty"),
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Image.asset('assets/images/empty_wishlist.png'),
+                      SizedBox(height: 20.h,),
+                      Text(
+                        "Your Wishlist is empty!",
+                        style: TextStyle(fontSize: 26.sp,color: kWishlist,fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 20.h,),
+                      Text(
+                        "seems like you don't have wishes",
+                        style: TextStyle(fontSize: 18.sp,color: Colors.grey),
+                      ),
+                      SizedBox(height: 10.h,),
+                      Text(
+                        "Make a wish!",
+                        style: TextStyle(fontSize: 18.sp,color: Colors.grey),
+                      ),
+                      SizedBox(height: 40.h,),
+                      ElevatedButton(
+                        onPressed: ()async{
+                          pushNewScreen(context, screen: CustomerHome());
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: kPrimary, fixedSize: Size(200.w, 40.h),),
+                        child: Text(
+                          "Start Shopping",
+                          style: TextStyle(fontSize: 17.sp),
+                        ),
+                      ),
+                      SizedBox(height: 40.h,),
+                    ],
+                  ),
                 );
               } else {
                 return ListView(
