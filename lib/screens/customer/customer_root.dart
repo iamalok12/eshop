@@ -99,9 +99,9 @@ class _CustomerRootState extends State<CustomerRoot> {
       ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.favorite,size: 27.w,),
-        title: "Favorites",
+        title: "Wishlist",
         inactiveColorPrimary: CupertinoColors.systemGrey,
-        activeColorPrimary: Colors.green,
+        activeColorPrimary: kWishlist,
       ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.shopping_cart,size: 27.w,),
@@ -113,7 +113,7 @@ class _CustomerRootState extends State<CustomerRoot> {
         icon: Icon(Icons.perm_identity,size: 27.w,),
         title: "Profile",
         inactiveColorPrimary: CupertinoColors.systemGrey,
-        activeColorPrimary: Colors.red,
+        activeColorPrimary: kPrimary,
       ),
     ];
   }
